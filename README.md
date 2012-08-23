@@ -1,15 +1,17 @@
-caatinga
+Caatinga
 ========
 
 Backup program written in python.
 
-Thank you for downloading the caatinga backup and restore program.  This program is
-written in python and is compatible with version 2.6 or newer, including 3.x.
-caatinga is used to perform complete system backups and keeps old backups to 
-maintain history of your file system changes.  The backups execute quicky and
-use a small amount of disk space.  The lscaat program is used to view, restore
-and manage files that have been backed up.
+A backup program used for making full system backups.  Each time a backup is
+performed, a new snapshot of the file system is created.  This creates a history
+of all files on your system allowing you to restore files from any point in
+time.  Snapshots are created using hard links.  As a result, each backup takes a
+minimal amount of disk space and time to execute.  This efficiency allows
+backups to be ran frequently in a command scheduler to insure current data is
+always backed up.
 
+This program is compatible with python versions 2.6 or newer, including 3.x.
 
 Quick Setup:
 
@@ -47,4 +49,4 @@ built in help system found in lscaat:
 
 I hope you enjoy this program as much as I have enjoyed writing it.
 If you find any bugs or have any comments or suggestions, please email
-me at headmastersquall@gmail.com and include caatinga in the subject line.
+me at (headmastersquall at gmail dot com) and include caatinga in the subject line.
