@@ -1,0 +1,178 @@
+.\" Copyright 2012 Chris Taylor
+.\"
+.\" This file is part of caatinga.
+.\"
+.\" Caatinga is free software: you can redistribute it and/or modify
+.\" it under the terms of the GNU General Public License as published by
+.\" the Free Software Foundation, either version 3 of the License, or
+.\" (at your option) any later version.
+.\"
+.\" Caatinga is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public License
+.\" along with caatinga.  If not, see <http://www.gnu.org/licenses/>.
+.\"
+.\" Man page for the lscaat program
+.\"
+.TH lscaat 1 "June 13 2012" 2.0 lscaat
+
+
+.SH NAME
+.B lscaat
+\- restore program for the caat backup program.
+
+
+.SH SYNOPSIS
+.B lscaat
+<subcommand> [options]
+
+
+.SH DESCRIPTION
+.B lscaat
+is a powerful utility for listing and restoring items that have
+been backed up using the
+.B caat
+backup tool.  Subcommands are available to provide status information
+regarding the state of files on your local file system as well as the
+status of your backup drive.  The subcommands available are easy to use and
+remember since they are composed in a natural way (see EXAMPLES).
+
+
+.SH OPTIONS
+
+.SS "Subcommands"
+.P
+.B changes
+\- Show changes in this directory compared to the last backup made
+.P
+.B diff
+\- Show the difference between a local file and a backed up version
+.P
+.B info
+\- Display information about the backup device
+.P
+.BR list " (" ls )
+\- List backed up items from the current directory
+.P
+.BR remove " (" rm )
+\- Delete items from the backup drive
+.P
+.B restore
+\- Restore items from a backup
+.P
+Run
+.RB ` lscaat
+help
+.RB [ subcommand ]'
+for details and usage on individual subcommands.
+
+.SS Optional Command Options
+.TP
+.BR \-b " location, " \-\-backup\-location =<location>
+Backup location to use.  This will override the setting in caatinga.conf.
+.TP
+.BR \-c " file, " \-\-config =<file>
+Specify an alternate configuration file.
+.TP
+.BR \-n " hostname, " \-\-hostname =<hostname>
+Use this hostname instead of what is defined for the local system.
+.TP
+.BR \-r " path, " \-\-root =<path>
+Use this as the root directory to be backed up.
+.TP
+.BR \-V ", " \-\-version
+Displays version information and exits.
+
+
+.SH FILES
+.I /etc/caatinga/caatinga.conf
+.RS
+The configuration file used by
+.B caat
+and
+.B lscaat.
+See
+.BR caatinga.conf (5)
+for further details.
+
+
+.SH EXAMPLES
+.P
+List all files that have been backed up from the current working directory
+.RS
+.P
+.B lscaat
+list
+.RE
+
+.P
+List all files from a specific backup that have been backed up from the current
+working directory
+.RS
+.P
+.B lscaat
+list from backup 12
+.RE
+
+.P
+List all .py files from a specific backup that have been backed up from the
+current working directory
+.RS
+.P
+.B lscaat
+list "*.py" from backup 14
+.RE
+
+.P
+Restore the file phonebook.txt from the most recent backup to the current
+working directory
+.RS
+.P
+.B lscaat
+restore phonebook.txt
+.RE
+
+.P
+Restore the file phonebook.txt from backup 10 as the file name of
+myphonebook.txt to the current working directory
+.RS
+.P
+.B lscaat
+restore phonebook.txt from backup 10 as myphonebook.txt
+.RE
+
+.P
+Remove the file phonebook.txt from backup 8
+.RS
+.P
+.B lscaat
+remove phonebook.txt from backup 8
+.RE
+
+.P
+Remove all files beginning with phonebook.txt from all backups
+.RS
+.P
+.B lscaat
+remove "phonebook.txt*" from all
+.RE
+
+.P
+Show the difference between the file phonebook.txt and the version from the
+last backup
+.RS
+.P
+.B lscaat
+diff phonebook.txt
+.RE
+
+.SH AUTHOR
+Chris Taylor <headmastersquall at gmail dot com>
+
+
+.SH SEE ALSO
+.BR caat (1)
+.BR caatinga.conf (5)

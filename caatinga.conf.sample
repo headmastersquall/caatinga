@@ -1,0 +1,55 @@
+# Copyright 2012 Chris Taylor
+#
+# This file is part of caatinga.
+#
+# Caatinga is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Caatinga is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with caatinga.  If not, see <http://www.gnu.org/licenses/>.
+
+# Configuration options for caat and lscaat.  For more information on the
+# following options, see man caat.conf(5).
+
+# The root directory of the system being backed up.
+root = /
+
+# Use this option to provide an alternate host name.  If this is not set,
+# the host name for the local system will be used.
+#hostname = myhostname
+
+# Do not backup files that are greater than the
+# specified amount.  Size in MB
+#max_file_size = 10240
+
+# What percentage of the backup drive must be used before old
+# backups are deleted.
+drive_percentage = 95
+
+# Where your backup drive is going to be mounted.
+#backup_location = /mnt/usb
+
+# Group name that backups are created for.  Be sure to add users to this group
+# that you want to grant access to the backup drive.  This option should also
+# be set prior to registering a backup device to insure proper ownership is set.
+#backup_group = backup
+
+# Set this to yes if you would like old backups to be reduced.
+# The backups will be reduced by age to a frequency of daily then
+# weekly.  Daily backups are kept for 31 days, then reduced to
+# weekly.
+reduce_backups = yes
+
+# Do not backup these items.  Value must be the full path of the file
+# or directory to be skipped.  Glob patterns can be used to skip multiple
+# items.
+ignore = /proc
+ignore = /dev
+ignore = /sys

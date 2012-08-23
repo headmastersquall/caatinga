@@ -1,0 +1,142 @@
+.\" Copyright 2012 Chris Taylor
+.\"
+.\" This file is part of caatinga.
+.\"
+.\" Caatinga is free software: you can redistribute it and/or modify
+.\" it under the terms of the GNU General Public License as published by
+.\" the Free Software Foundation, either version 3 of the License, or
+.\" (at your option) any later version.
+.\"
+.\" Caatinga is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public License
+.\" along with caatinga.  If not, see <http://www.gnu.org/licenses/>.
+.\"
+.\" Man page for the caat program
+.\"
+.TH caat 1 "June 14 2012" 2.0 caat
+
+
+.SH NAME
+.B caat
+\- create a full system backup.
+
+
+.SH SYNOPSIS
+.B caat
+[options]
+
+
+.SH DESCRIPTION
+.B caat
+is a backup program used for making full system backups.  Each time a backup is
+performed, a new snapshot of the file system is created.  This creates a history
+of all files on your system allowing you to restore files from any point in
+time.
+.B caat
+uses hard links when creating snapshots.  As a result, each backup takes a
+minimal amount of disk space and time to execute.  This efficiency allows
+backups to be ran frequently in a command scheduler to insure current data is
+always backed up.
+
+Each backup that's made is organized by the systems host name.  This allows more
+than one system to use the same backup device.  Files that are backed up can be
+viewed, restored or deleted using the
+.BR lscaat (1)
+tool.
+.B caat
+also uses an external configuration file called
+.BR caatinga.conf (5)
+which includes all information needed to perform a system backup.  This eliminates
+the need to remember numerous cryptic command options to backup your system, simply
+run
+.B caat
+and it does it's job.
+
+
+.SH OPTIONS
+.TP
+.BR \-b " location, " \-\-backup\-location =<location>
+Backup location to use.  This will override the setting in caatinga.conf.
+.TP
+.BR \-c " file, " \-\-config =<file>
+Specify an alternate configuration file.
+.TP
+.BR \-d ", " \-\-delete\-oldest
+Delete the oldest backup has been created.
+.TP
+.BR \-g ", " \-\-register\-backup
+Register the backup location as a backup device.
+.TP
+.BR \-h ", " \-\-help
+Displays help message.
+.TP
+.BR \-n " hostname, " \-\-hostname =<hostname>
+Use this hostname instead of what is defined for the local system.
+.TP
+.BR \-r " path, " \-\-root =<path>
+Use this as the root directory to be backed up.
+.TP
+.BR \-v ", " \-\-verbose
+Verbose mode.  Display backup activity.
+.TP
+.BR \-V ", " \-\-version
+Displays version information and exits.
+
+
+.SH FILES
+.I /etc/caatinga/caatinga.conf
+.RS
+The configuration file used by
+.B caat
+and
+.B lscaat.
+See
+.BR caatinga.conf (5)
+for further details.
+
+
+.SH EXAMPLES
+.P
+Register the backup location in
+.BR caatinga.conf (5)
+as a backup device.
+.RS
+.P
+.B caat
+\-\-register\-backup
+.RE
+
+.P
+Create a backup of the current system.
+.RS
+.P
+.B caat
+.RE
+
+.P
+Create a backup of the current system using an alternate backup device.
+.RS
+.P
+.B caat
+\-\-backup\-location=/mnt/sdg1
+.RE
+
+.P
+Create a backup of another file system specifying an alternate host name.
+.RS
+.P
+.B caat
+\-\-root=/mnt/sdb1 \-\-hostname=casper
+.RE
+
+.SH AUTHOR
+Chris Taylor <headmastersquall at gmail dot com>
+
+
+.SH SEE ALSO
+.BR lscaat (1)
+.BR caatinga.conf (5)

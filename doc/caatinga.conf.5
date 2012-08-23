@@ -1,0 +1,95 @@
+.\" Copyright 2012 Chris Taylor
+.\"
+.\" This file is part of caatinga.
+.\"
+.\" Caatinga is free software: you can redistribute it and/or modify
+.\" it under the terms of the GNU General Public License as published by
+.\" the Free Software Foundation, either version 3 of the License, or
+.\" (at your option) any later version.
+.\"
+.\" Caatinga is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public License
+.\" along with caatinga.  If not, see <http://www.gnu.org/licenses/>.
+.\"
+.\" Man page for the caatinga.conf configuration file
+.\"
+.TH caatinga.conf 5 "June 14 2012" caat "File Formats"
+
+
+.SH NAME
+caatinga.conf \- configuration file for the
+.B caat
+and
+.B lscaat
+backup and restore programs.
+
+
+.SH SYNOPSIS
+.B caatinga.conf
+
+
+.SH DESCRIPTION
+The file
+.B caatinga.conf
+contains configuration options for the
+.B caat
+and
+.B lscaat
+backup and restore programs.  These options control where the backups are to be
+stored, as well as provide a degree of control over what files get backed up.
+
+.B root
+.RS
+The root directory of the system that is going to be backed up.
+.RE
+
+.B max_file_size
+.RS
+Do not backup files larger than this value.  Size is in MB.
+.RE
+
+.B drive_percentage
+.RS
+How full must the backup drive get before old backups start to be deleted.
+.RE
+
+.B backup_location
+.RS
+The mount point of the backup device where the backups will be written to.
+.RE
+
+.B backup_group
+.RS
+Group name that backups are owned by.  Be sure to add users to this group
+that you want to grant access to the backup drive.  This option should also
+be set prior to registering a backup device to insure proper ownership is set.
+.RE
+
+.B reduce_backups
+.RS
+Value can be yes or no.  If set to yes the backups will automatically be
+reduced to a daily frequency for 31 days, then reduced to weekly.
+.RE
+
+.B ignore
+.RS
+Do not backup these files or directories.  This entry can appear more than once
+in the file and may also contain glob expressions.
+.RE
+
+
+.SH FILES
+.I /etc/caatinga/caatinga.conf
+
+
+.SH AUTHOR
+Chris Taylor <headmastersquall at gmail dot com>
+
+
+.SH SEE ALSO
+.BR lscaat (1)
+.BR caat (1)
