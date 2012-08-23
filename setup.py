@@ -34,6 +34,6 @@ setup(
       scripts=["caat", "lscaat"],
       packages=['caatinga', 'caatinga.core', 'caatinga.caat', 'caatinga.lscaat'],
       data_files=[('/etc/caatinga', ['caatinga.conf.sample']),
-                   ('/usr/share/man/man1', ["doc/lscaat.1.gz", "doc/caat.1.gz"]),
-                   ("/usr/share/man/man5", ["doc/caatinga.conf.5.gz"])],
+                   ('/usr/share/man/man1', ["docs/lscaat.1.gz", "docs/caat.1.gz"]),
+                   ("/usr/share/man/man5", ["docs/caatinga.conf.5.gz"])],
       package_data={'caatinga' : ['README.md', 'COPYING']})
