@@ -10,7 +10,7 @@
   Note: The user module can be used here to get the users home directory.
 
 - Create a new command called caatspace that would allow a loopback or qcow type file
-  to be created to be used as a local backup device.
+  to be created and used as a local backup device.
 
   Command options:
 
