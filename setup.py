@@ -22,7 +22,7 @@ from distutils.core import setup
 setup(
       author="Chris Taylor",
       author_email="headmastersquall@gmail.com",
-	  url="https://github.com/headmastersquall/caatinga",
+      url="https://github.com/headmastersquall/caatinga",
       description="A backup program that stores multiple snapshots of a file system.",
       long_description="",
       fullname="caatinga",
