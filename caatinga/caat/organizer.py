@@ -21,7 +21,7 @@ from datetime import datetime, timedelta
 import caatinga.core.functions as fn
 
 
-def organize(backupHome, writer):
+def organize(backupHome):
     """
     Reduce the backups to a frequency of daily for those that are
     older than one day, and to weekly for those that are older
@@ -29,11 +29,9 @@ def organize(backupHome, writer):
     """
     catagorized = _catagorize(fn.getBackups(backupHome).values())
     for backup in _getExtraDailyBackups(catagorized["daily"]):
-        writer("Deleting: {0}".format(backup))
-        fn.deleteBackup(backupHome, backup)
+        fn.markBackupForDeletion(backupHome, backup)
     for backup in _getExtraWeeklyBackups(catagorized["weekly"]):
-        writer("Deleting: {0}".format(backup))
-        fn.deleteBackup(backupHome, backup)
+        fn.markBackupForDeletion(backupHome, backup)
 
 
 def _catagorize(backups, now=datetime.now()):

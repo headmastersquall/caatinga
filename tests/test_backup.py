@@ -51,50 +51,6 @@ class BackupTestCase(unittest.TestCase):
             os.path.exists(root),
             "Backup root does not exist.")
 
-    def test_getIncompleteBackupFile(self):
-        file_ = backup.getIncompleteBackupFile(self._backupHome)
-        self.assertEqual(
-            file_,
-            join(self._backupHome, ".incomplete_backup"),
-            "Incorrect incomplete backup file returned: {0}".format(file_))
-
-    def test_deleteIncompleteBackup(self):
-        backupName = "ABC"
-        os.mkdir(os.path.join(self._backupHome, backupName))
-        incompleteBackupFile = backup.getIncompleteBackupFile(self._backupHome)
-        backup.createIncompleteBackupFile(incompleteBackupFile, backupName)
-        backup.deleteIncompleteBackup(self._backupHome, incompleteBackupFile)
-        self.assertFalse(
-            os.path.exists(backupName),
-            "Incomplete backup was not deleted.")
-        self.assertFalse(
-            os.path.exists(incompleteBackupFile),
-            "Incomplete backup file was not deleted.")
-
-    def test_deleteIncompleteBackupFile(self):
-        backupName = "12345-Moo"
-        backupFile = backup.getIncompleteBackupFile(self._backupHome)
-        backup.createIncompleteBackupFile(backupFile, backupName)
-        backup.deleteIncompleteBackupFile(self._backupHome)
-        self.assertFalse(
-            os.path.exists(backupFile),
-            "Incomplete backup file was not deleted.")
-
-    def test_createIncompleteBackupFile(self):
-        backupName = "12345"
-        backupFile = backup.getIncompleteBackupFile(self._backupHome)
-        backup.createIncompleteBackupFile(backupFile, backupName)
-        self.assertTrue(
-            os.path.exists(backupFile),
-            "Incomplete backup file doesn't exist.")
-        with open(backupFile) as f:
-            content = f.readline()
-        self.assertEqual(
-            backupName,
-            content,
-            "Incomplete backup content is different: {0}".format(content))
-        os.remove(backupFile)
-
     def test_shouldFileBeSkipped(self):
         testFile = join(self._backupHome, "cheese")
         largeFile = join(self._backupHome, "big-cheese")

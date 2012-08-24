@@ -174,6 +174,28 @@ def deleteBackup(backupHome, backup):
     shutil.rmtree(os.path.join(backupHome, backup))
 
 
+def markBackupForDeletion(backupHome, backup):
+    """
+    Mark a backup to be deleted later.
+    """
+    fullBackupName = os.path.join(backupHome, backup)
+    os.rename(fullBackupName, fullBackupName + ".delete")
+
+
+def getBackupsMarkedForDeletion(backupHome):
+    """
+    Get backups that have the .delete extention.
+    """
+    return [d for d in os.listdir(backupHome) if d.endswith(".delete")]
+
+
+def getPartialBackups(backupHome):
+    """
+    Get backups that have the .part extention.
+    """
+    return [d for d in os.listdir(backupHome) if d.endswith(".part")]
+
+
 def toDateTime(backupDirectory):
     """
     Returns a datetime instance of a backup directory to be used

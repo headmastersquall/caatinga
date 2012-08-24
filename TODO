@@ -4,13 +4,26 @@
 
 - Create an AUR PKGBUILD
 
-- Add an option in caatinga.conf to allow the user to define their own diff program
+- Add locking support to prevent more than one backup to run at the same time.
 
-- Add ucaat and ulscaat commands for running backups for just the users home directory.
-  Note: The user module can be used here to get the users home directory.
+- Add hooks support to allow scripts to run pre and post backup.  This would be
+  useful for creating sql dumps.
 
-- Create a new command called caatspace that would allow a loopback or qcow type file
-  to be created and used as a local backup device.
+- Store the permissions, and ownership in a database instead of preserving them
+  on the backed up file.  This would allow backups to be ran on mounted nfs
+  shares.  Create a file in each directory containing the permissions of the
+  containing files.  This needs some thought to make sure it is a feature that
+  follows the goal of this application.
+
+- Add an option in caatinga.conf to allow the user to define their own diff
+  program
+
+- Add ucaat and ulscaat commands for running backups for just the users home
+  directory.  Note: The user module can be used here to get the users home
+  directory.
+
+- Create a new command called caatspace that would allow a loopback or qcow
+  type file to be created and used as a local backup device.
 
   Command options:
 

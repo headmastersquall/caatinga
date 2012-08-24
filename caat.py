@@ -35,7 +35,8 @@ These options are also available in lscaat.
 Options:
 
     -b location, --backup-location=<location>
-        Backup location to use.  This will override the setting in caatinga.conf.
+        Backup location to use.  This will override the setting in
+        caatinga.conf.
 
     -c file, --config=<file>
         Specify an alternate configuration file.
@@ -80,9 +81,9 @@ def main(args):
         exit(er.errno)
     except KeyboardInterrupt:
         exit(1)
-    except Exception as ex:
-        print(str(ex).strip("'"))
-        exit(1)
+    #except Exception as ex:
+    #    print(str(ex).strip("'"))
+    #    exit(1)
 
 
 def run_caat(args):
@@ -104,23 +105,21 @@ def run_caat(args):
     backupHome = fn.getBackupHome(settings.backupLocation, settings.hostName)
     previousBackup = os.path.realpath(fn.getLatestLink(backupHome))
     checkForDeleteOldest(commandArgs, backupHome)
-    checkForIncompleteBackup(backupHome, writer)
+    markPartialBackupForDeletion(backupHome)
     backupRoot = backup.createBackupRoot(
         backupHome,
-        strftime("%Y-%m-%d-%H%M%S"),
+        strftime("%Y-%m-%d-%H%M%S") + ".part",
         settings.backupgid)
-    backup.createIncompleteBackupFile(
-        backup.getIncompleteBackupFile(backupHome),
-        backupRoot)
     backup.backupDirectory(
         backupRoot,
         previousBackup,
         settings.root,
         settings,
         writer)
+    os.rename(backupRoot, backupRoot.replace(".part", ""))
     fn.updateLatestLink(backupHome)
-    backup.deleteIncompleteBackupFile(backupHome)
-    checkForReduceBackups(settings.reduceBackups, backupHome, writer)
+    checkForReduceBackups(settings.reduceBackups, backupHome)
+    deleteBackupsMarkedForDeletion(backupHome, writer)
     checkDrivePercentage(backupHome, settings.drivePercentage, writer)
 
 
@@ -149,6 +148,16 @@ def checkForDeleteOldest(commandArgs, backupHome):
         exit(0)
 
 
+def markPartialBackupForDeletion(backupHome):
+    """
+    Looks for any partial backups and marks them for deletion.
+    """
+    partials = fn.getPartialBackups(backupHome)
+    for partial in partials:
+        partialBackup = os.path.join(backupHome, partial)
+        os.rename(partialBackup, partialBackup.replace(".part", ".delete"))
+
+
 def checkForIncompleteBackup(backupHome, writer):
     """
     Check to see if an incomplete backup file exists.  If so, delete that
@@ -161,12 +170,21 @@ def checkForIncompleteBackup(backupHome, writer):
             backup.getIncompleteBackupFile(backupHome))
 
 
-def checkForReduceBackups(reduceBackups, backupHome, writer):
+def checkForReduceBackups(reduceBackups, backupHome):
     """
     Reduce the backups if the reduce backups option is provided.
     """
     if reduceBackups:
-        organize(backupHome, writer)
+        organize(backupHome)
+
+
+def deleteBackupsMarkedForDeletion(backupHome, writer):
+    """
+    Delete backups that are marked to be deleted.
+    """
+    for backup in fn.getBackupsMarkedForDeletion(backupHome):
+        writer("Deleting: {0}".format(backup))
+        fn.deleteBackup(backupHome, backup)
 
 
 def checkDrivePercentage(backupHome, drivePercentage, outputWriter):

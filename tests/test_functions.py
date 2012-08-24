@@ -107,6 +107,25 @@ class FunctionsTestCase(unittest.TestCase):
         fn.deleteBackup(self._backupHome, backup)
         self.assertFalse(os.path.exists(backupPath))
 
+    def test_markBackupForDeletion(self):
+        backup = "2012-01-28-120628"
+        backupPath = join(self._backupHome, backup)
+        os.makedirs(backupPath)
+        fn.markBackupForDeletion(self._backupHome, backup)
+        self.assertTrue(os.path.exists(backupPath + ".delete"))
+
+    def test_getBackupsMarkedForDeletion(self):
+        backup = join(self._backupHome, "2010-01-25-120729.delete")
+        os.makedirs(backup)
+        backups = fn.getBackupsMarkedForDeletion(self._backupHome)
+        self.assertTrue(len(backups) == 1)
+
+    def test_getPartialBackups(self):
+        backup = join(self._backupHome, "2009-01-24-120729.part")
+        os.makedirs(backup)
+        backups = fn.getPartialBackups(self._backupHome)
+        self.assertTrue(len(backups) == 1)
+
     def test_toDateTime(self):
         dt = fn.toDateTime("2012-05-18-160013")
         self.assertEqual(dt.year, 2012)

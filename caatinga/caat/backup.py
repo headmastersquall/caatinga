@@ -35,43 +35,6 @@ def createBackupRoot(backupHome, backup, gid):
     return root
 
 
-def getIncompleteBackupFile(backupHome):
-    """
-    Builds the path and file name of the incomplete backup file.
-    """
-    return join(backupHome, ".incomplete_backup")
-
-
-def deleteIncompleteBackup(backupHome, incompleteBackupFile):
-    """
-    Deletes the incomplete backup and the incomplete backup file.
-    """
-    with open(incompleteBackupFile) as f:
-        backup = f.readline()
-    if exists(backup):
-        fn.deleteBackup(backupHome, backup)
-    deleteIncompleteBackupFile(backupHome)
-    return backup
-
-
-def deleteIncompleteBackupFile(backupHome):
-    """
-    Delete the incomplete backup file if it exists.
-    """
-    incompleteBackupFile = getIncompleteBackupFile(backupHome)
-    if exists(incompleteBackupFile):
-        os.remove(incompleteBackupFile)
-
-
-def createIncompleteBackupFile(incompleteBackupFile, backup):
-    """
-    Creates an incomplete backup file containing the backup that
-    was not completed.
-    """
-    with open(incompleteBackupFile, 'w') as file_:
-        file_.write(os.path.basename(backup))
-
-
 def backupDirectory(backupRoot, previousBackup, directory, settings, writer):
     """
     Primary function to perform a system backup.
