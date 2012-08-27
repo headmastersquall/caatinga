@@ -69,7 +69,7 @@ def main(args):
     Application entry point.
     """
     try:
-        run_caat(args)
+        run_backup(args)
         exit(0)
     except OSError as er:
         if er.errno == errorcodes.FILESYSTEM_FULL:
@@ -81,14 +81,14 @@ def main(args):
         exit(er.errno)
     except KeyboardInterrupt:
         exit(1)
-    #except Exception as ex:
-    #    print(str(ex).strip("'"))
-    #    exit(1)
+    except Exception as ex:
+        print(str(ex).strip("'"))
+        exit(1)
 
 
-def run_caat(args):
+def run_backup(args):
     """
-    Main method for caat.
+    Main method that performs the backup.
     """
     commandArgs = CommandArgs(args)
     if commandArgs.help:
