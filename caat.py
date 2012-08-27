@@ -104,20 +104,27 @@ def run_backup(args):
     writer = fn.getOutputWriter(commandArgs.verbose)
     backupHome = fn.getBackupHome(settings.backupLocation, settings.hostName)
     previousBackup = os.path.realpath(fn.getLatestLink(backupHome))
+    lockFile = getLockFile(backupHome)
     checkForDeleteOldest(commandArgs, backupHome)
     markPartialBackupForDeletion(backupHome)
-    backupRoot = backup.createBackupRoot(
-        backupHome,
-        strftime("%Y-%m-%d-%H%M%S") + ".part",
-        settings.backupgid)
-    backup.backupDirectory(
-        backupRoot,
-        previousBackup,
-        settings.root,
-        settings,
-        writer)
-    os.rename(backupRoot, backupRoot.replace(".part", ""))
-    fn.updateLatestLink(backupHome)
+
+    try:
+        lock(lockFile)
+        backupRoot = backup.createBackupRoot(
+            backupHome,
+            strftime("%Y-%m-%d-%H%M%S") + ".part",
+            settings.backupgid)
+        backup.backupDirectory(
+            backupRoot,
+            previousBackup,
+            settings.root,
+            settings,
+            writer)
+        os.rename(backupRoot, backupRoot.replace(".part", ""))
+        fn.updateLatestLink(backupHome)
+    finally:
+        backup.removeLockFile(lockFile)
+
     checkForReduceBackups(settings.reduceBackups, backupHome)
     deleteBackupsMarkedForDeletion(backupHome, writer)
     checkDrivePercentage(backupHome, settings.drivePercentage, writer)
@@ -136,6 +143,14 @@ def checkForRegisterOption(settings, commandArgs):
         print(("The device mounted at {0} is now registered as a " +
               "backup device.").format(settings.backupLocation))
         exit(0)
+
+
+def getLockFile(backupHome):
+    """
+    Returns the name of the lock file based on the executable name.
+    """
+    exe = os.path.basename(argv[0]).rstrip(".py")
+    return os.path.join(backupHome, exe + ".pid")
 
 
 def checkForDeleteOldest(commandArgs, backupHome):
@@ -158,16 +173,16 @@ def markPartialBackupForDeletion(backupHome):
         os.rename(partialBackup, partialBackup.replace(".part", ".delete"))
 
 
-def checkForIncompleteBackup(backupHome, writer):
+def lock(lockFile):
     """
-    Check to see if an incomplete backup file exists.  If so, delete that
-    backup.
+    Creates a lock file if one is not present.  If a lock file already exists,
+    an exception will be thrown.
     """
-    if os.path.exists(backup.getIncompleteBackupFile(backupHome)):
-        writer("Incomplete backup detected")
-        backup.deleteIncompleteBackup(
-            backupHome,
-            backup.getIncompleteBackupFile(backupHome))
+    if os.path.exists(lockFile):
+        with open(lockFile) as lock:
+            pid = lock.readline()
+        raise Exception("A backup is currently running [{0}]".format(pid))
+    backup.createLockFile(lockFile)
 
 
 def checkForReduceBackups(reduceBackups, backupHome):

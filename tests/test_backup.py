@@ -42,6 +42,18 @@ class BackupTestCase(unittest.TestCase):
     def tearDown(self):
         rmtree(self._backupHome)
 
+    def test_createLockFile(self):
+        lockFile = join(self._backupHome, "test.lock")
+        backup.createLockFile(lockFile)
+        self.assertTrue(os.path.exists(lockFile))
+        os.remove(lockFile)
+
+    def test_removeLockFile(self):
+        lockFile = join(self._backupHome, "test.lock")
+        backup.createLockFile(lockFile)
+        backup.removeLockFile(lockFile)
+        self.assertFalse(os.path.exists(lockFile))
+
     def test_createBackupRoot(self):
         backupName = "FOO-123"
         gid = os.getgid()

@@ -23,6 +23,23 @@ import caatinga.core.functions as fn
 from os.path import join, exists
 
 
+def createLockFile(lockFile):
+    """
+    Create a new file with the provided name that contains the pid of the
+    current process.
+    """
+    with open(lockFile, 'w') as lock:
+        lock.write(str(os.getpid()))
+
+
+def removeLockFile(lockFile):
+    """
+    Removes the provided lock file.
+    """
+    if os.path.exists(lockFile):
+        os.remove(lockFile)
+
+
 def createBackupRoot(backupHome, backup, gid):
     """
     Creates the root directory for a backup and assigns the
