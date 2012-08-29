@@ -71,19 +71,19 @@ def main(args):
     try:
         run_backup(args)
         exit(0)
-    except OSError as er:
-        if er.errno == errorcodes.FILESYSTEM_FULL:
-            print("Backup drive is full")
-        elif er.errno == errorcodes.PERMISSION_DENIED:
-            print("Permission Denied")
-        else:
-            print("Operation not permitted on the mounted backup file system")
-        exit(er.errno)
+    #except OSError as er:
+    #    if er.errno == errorcodes.FILESYSTEM_FULL:
+    #        print("Backup drive is full")
+    #    elif er.errno == errorcodes.PERMISSION_DENIED:
+    #        print("Permission Denied")
+    #    else:
+    #        print("Operation not permitted on the mounted backup file system")
+    #    exit(er.errno)
     except KeyboardInterrupt:
         exit(1)
-    except Exception as ex:
-        print(str(ex).strip("'"))
-        exit(1)
+    #except Exception as ex:
+    #    print(str(ex).strip("'"))
+    #    exit(1)
 
 
 def run_backup(args):
@@ -106,14 +106,14 @@ def run_backup(args):
     previousBackup = os.path.realpath(fn.getLatestLink(backupHome))
     lockFile = getLockFile(backupHome)
     checkForDeleteOldest(commandArgs, backupHome)
+    backupRoot = backup.createBackupRoot(
+        backupHome,
+        strftime("%Y-%m-%d-%H%M%S") + ".part",
+        settings.backupgid)
     markPartialBackupForDeletion(backupHome)
 
     try:
         lock(lockFile)
-        backupRoot = backup.createBackupRoot(
-            backupHome,
-            strftime("%Y-%m-%d-%H%M%S") + ".part",
-            settings.backupgid)
         backup.backupDirectory(
             backupRoot,
             previousBackup,

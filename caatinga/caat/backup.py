@@ -48,7 +48,7 @@ def createBackupRoot(backupHome, backup, gid):
     root = join(backupHome, backup)
     os.makedirs(root)
     os.chmod(root, 0o0770)
-    os.chown(root, os.getuid(), gid)
+    fn.tryToSetOwnership(root, os.getuid(), gid)
     return root
 
 

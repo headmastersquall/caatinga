@@ -42,7 +42,17 @@ def registerBackupDevice(backupLocation, gid):
     else:
         os.mkdir(backupHome)
         os.chmod(backupHome, 0o0770)
-        os.chown(backupHome, 0, gid)
+        tryToSetOwnership(backupHome, os.getuid(), gid)
+
+
+def tryToSetOwnership(item, uid, gid):
+    """
+    Try to set the ownership of the provided item.  If it fails, just continue.
+    """
+    try:
+        os.chown(item, uid, gid)
+    except OSError:
+        pass
 
 
 def getSettingsInstance(commandArgs):
@@ -144,7 +154,6 @@ def getOldestBackup(backupHome):
     """
     Gets the directory name of the oldest backup on the backup media.
     """
-
     backups = getBackups(backupHome)
     if len(backups) > 0:
         return backups[0]
