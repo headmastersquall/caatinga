@@ -71,19 +71,19 @@ def main(args):
     try:
         run_backup(args)
         exit(0)
-    #except OSError as er:
-    #    if er.errno == errorcodes.FILESYSTEM_FULL:
-    #        print("Backup drive is full")
-    #    elif er.errno == errorcodes.PERMISSION_DENIED:
-    #        print("Permission Denied")
-    #    else:
-    #        print("Operation not permitted on the mounted backup file system")
-    #    exit(er.errno)
+    except OSError as er:
+        if er.errno == errorcodes.FILESYSTEM_FULL:
+            print("Backup drive is full")
+        elif er.errno == errorcodes.PERMISSION_DENIED:
+            print("Permission Denied")
+        else:
+            print("Operation not permitted on the mounted backup file system")
+        exit(er.errno)
     except KeyboardInterrupt:
         exit(1)
-    #except Exception as ex:
-    #    print(str(ex).strip("'"))
-    #    exit(1)
+    except Exception as ex:
+        print(str(ex).strip("'"))
+        exit(1)
 
 
 def run_backup(args):
