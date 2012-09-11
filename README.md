@@ -1,6 +1,7 @@
 Caatinga
 ========
 
+## Introduction
 Backup program written in python.
 
 A backup program used for making full system backups.  Each time a backup is
@@ -13,8 +14,13 @@ always backed up.
 
 This program is compatible with python versions 2.6 or newer, including 3.x.
 
-Quick Setup:
+## Installation
 
+### Archlinux
+If you are using Archlinux there's an aur package available:
+https://aur.archlinux.org/packages.php?ID=62708
+
+### Quick Setup
 After downloading the package from the downloads page and extracting it, or
 by cloning the repository, follow these instructions to get setup.
 
@@ -40,6 +46,7 @@ by cloning the repository, follow these instructions to get setup.
   7.  Run caat from the console.
 
 
+## Documentation
 Further help and documentation can be found in several man pages as well as the
 built in help system found in lscaat:
 

@@ -1,7 +1,5 @@
 - Update CommandArgs to use argparse.
 
-- Create an AUR PKGBUILD
-
 - Add hooks support to allow scripts to run pre and post backup.  This would be
   useful for creating sql dumps.
 
