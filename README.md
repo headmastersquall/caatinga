@@ -4,13 +4,18 @@ Caatinga
 ## Introduction
 Backup program written in python.
 
-A backup program used for making full system backups.  Each time a backup is
-performed, a new snapshot of the file system is created.  This creates a history
-of all files on your system allowing you to restore files from any point in
-time.  Snapshots are created using hard links.  As a result, each backup takes a
-minimal amount of disk space and time to execute.  This efficiency allows
-backups to be ran frequently in a command scheduler to insure current data is
-always backed up.
+A backup program used for making full system backups to locally mounted media.
+Each time a backup is performed, a new snapshot of the file system is created.
+This creates a history of all files on your system allowing you to restore
+files from any point in time.  Snapshots are created using hard links, making
+each backup takes a minimal amount of disk space and time to execute.  This
+efficiency allows backups to be ran frequently in a command scheduler to
+insure current data is always backed up.
+
+If remote backups are desired, a filesystem from a remote computer can be
+mounted locally using http://fuse.sourceforge.net/sshfs.html.  This requires
+a remote machine to have ssh running and a user account defined that will be
+used for backup purposes.
 
 This program is compatible with python versions 2.6 or newer, including 3.x.
 
