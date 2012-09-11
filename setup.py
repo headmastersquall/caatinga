@@ -17,7 +17,10 @@
 # You should have received a copy of the GNU General Public License
 # along with caatinga.  If not, see <http://www.gnu.org/licenses/>.
 
-from distutils.core import setup
+import os
+from setuptools import setup
+
+os.system("gzip docs/*")
 
 setup(
     author="Chris Taylor",
@@ -38,3 +41,5 @@ setup(
                 ('/usr/share/man/man1', ["docs/lscaat.1.gz", "docs/caat.1.gz"]),
                 ("/usr/share/man/man5", ["docs/caatinga.conf.5.gz"])],
     package_data={'caatinga': ['README.md', 'COPYING']})
+
+os.system("gunzip docs/*")
