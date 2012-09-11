@@ -15,6 +15,10 @@ This program is compatible with python versions 2.6 or newer, including 3.x.
 
 Quick Setup:
 
+Archlinux
+If you are using Archlinux there's an aur package available:
+https://aur.archlinux.org/packages.php?ID=62708
+
 After downloading the package from the downloads page and extracting it, or
 by cloning the repository, follow these instructions to get setup.
 

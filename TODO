@@ -2,8 +2,6 @@
 
 - Update setup.py to use setuptools/distribute instead of distutils.
 
-- Create an AUR PKGBUILD
-
 - Add hooks support to allow scripts to run pre and post backup.  This would be
   useful for creating sql dumps.
 
