@@ -4,18 +4,18 @@ Caatinga
 ## Introduction
 Backup program written in python.
 
-A backup program used for making full system backups to locally mounted media.
-Each time a backup is performed, a new snapshot of the file system is created.
-This creates a history of all files on your system allowing you to restore
-files from any point in time.  Snapshots are created using hard links, making
-each backup takes a minimal amount of disk space and time to execute.  This
-efficiency allows backups to be ran frequently in a command scheduler to
-insure current data is always backed up.
+This program creates full system backups to locally mounted media.  Each backup
+that is performed creates a new snapshot of the filesystem.  This will build a
+history of all your files and allows you to restore files from any point in
+time.  Snapshots are created using hard links.  This makes each backup take a
+minimal amount of disk space and time to execute.  Since a new snapshot can be
+created efficiently, they can be ran frequently in a command scheduler, such as
+cron, to insure current data is always backed up.
 
 If remote backups are desired, a filesystem from a remote computer can be
 mounted locally using http://fuse.sourceforge.net/sshfs.html.  This requires
-a remote machine to have ssh running and a user account defined that will be
-used for backup purposes.
+a remote machine to have an SSH daemon running and a user account available for
+backup purposes.
 
 This program is compatible with python versions 2.6 or newer, including 3.x.
 
@@ -55,11 +55,11 @@ by cloning the repository, follow these instructions to get setup.
 Further help and documentation can be found in several man pages as well as the
 built in help system found in lscaat:
 
-  * man mime(1)
-  * man lsmime(1)
-  * man mime.conf(5)
-  * mime --help
-  * lsmime help
+  * man caat(1)
+  * man lscaat(1)
+  * man caat.conf(5)
+  * caat --help
+  * lscaat help
 
 
 I hope you enjoy this program as much as I have enjoyed writing it.
