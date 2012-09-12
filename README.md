@@ -6,7 +6,7 @@ Backup program written in python.
 
 This program creates full system backups to locally mounted media.  Each backup
 that is performed creates a new snapshot of the filesystem.  This will build a
-history of all your files and allows you to restore files from any point in
+history of all your files and allows you to restore data from any point in
 time.  Snapshots are created using hard links.  This makes each backup take a
 minimal amount of disk space and time to execute.  Since a new snapshot can be
 created efficiently, they can be ran frequently in a command scheduler, such as
@@ -25,21 +25,53 @@ This program is compatible with python versions 2.6 or newer, including 3.x.
 If you are using Archlinux there's an aur package available:
 https://aur.archlinux.org/packages.php?ID=62708
 
-### Quick Setup
-After downloading the package from the downloads page and extracting it, or
-by cloning the repository, follow these instructions to get setup.
+### Source
+Installing from source will insure you have the most current code base.  First
+clone the git repository.
 
-  1.  As root, run the command `python setup.py install` to install the program.
+`# git clone https://www.github.com/headmastersquall/caatinga`
 
-  2.  Rename the sample configuration file
+Change to the caatinga directory that was just created, then run the install as
+root.
 
-      `cd /etc/caatinga`
-      `mv caatinga.conf.sample caatinga.conf`
+`$ python setup.py install`
 
-  3.  Edit the configuration file and set the `backup_location`.
+### Download
+If you don't have git installed on your computer, or prefer to install from a
+milestone, a download is available at.
+
+`https://github.com/headmastersquall/caatinga/downloads`
+
+After you download the package, it can be extracted using the following
+command.
+
+`# tar xvf caatinga-x.x.x.tar.gz`
+
+Change to the caatinga-x.x.x directory then run the install as root.
+
+`$ python setup.py install`
+
+After you have installed the package from one of the previous methods, it will
+need to be configured before you make your first backup.  The next section will
+walk you though configuring caatinga to backup your system.
+
+
+## Quick Setup
+This section walks you through the minimal configuration steps you will need to
+perform before creating your first backup.
+
+  1.  Install the caatinga using one of the methods mentioned above.
+
+  2.  Rename the sample configuration file located in /etc/caatinga.
+
+      `$ mv caatinga.conf.sample caatinga.conf`
+
+  3.  Edit the configuration file and set the `backup_location` to where you
+      want your snapshots to be stored.  This must be a mounted filesystem such
+      as an internal drive for backup use, or an external usb drive.
 
   4.  Optionally set the `backup_group` to allow normal users to access their
-      backed up files
+      backed up files.  Remember to add the users to this group as well.
 
   5.  Make sure your backup drive is mounted.
 
@@ -48,7 +80,7 @@ by cloning the repository, follow these instructions to get setup.
 
       `caat -g`
 
-  7.  Run caat from the console.
+  7.  Run `caat` from the console to create your first backup.
 
 
 ## Documentation
@@ -63,5 +95,5 @@ built in help system found in lscaat:
 
 
 I hope you enjoy this program as much as I have enjoyed writing it.
-If you find any bugs or have any comments or suggestions, please email
-me at (headmastersquall at gmail dot com) and include caatinga in the subject line.
+If you find any bugs or have any comments or suggestions, please post them at
+https://github.com/headmastersquall/caatinga/issues.
