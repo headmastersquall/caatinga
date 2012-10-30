@@ -37,17 +37,10 @@ root.
 `$ python setup.py install`
 
 ### Download
-If you don't have git installed on your computer, or prefer to install from a
-milestone, a download is available at.
-
-`https://github.com/headmastersquall/caatinga/downloads`
-
-After you download the package, it can be extracted using the following
-command.
-
-`# tar xvf caatinga-x.x.x.tar.gz`
-
-Change to the caatinga-x.x.x directory then run the install as root.
+If you don't have git installed on your computer, download the repository as a
+zip file located at the top of the main page.  After the download completes,
+unzip the archive and cd into the extracted directory.  Then run the install
+program.
 
 `$ python setup.py install`
 
