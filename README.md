@@ -19,11 +19,14 @@ backup purposes.
 
 This program is compatible with python versions 2.6 or newer, including 3.x.
 
+
 ## Installation
+
 
 ### Archlinux
 If you are using Archlinux there's an aur package available:
 https://aur.archlinux.org/packages.php?ID=62708
+
 
 ### Source
 Installing from source will insure you have the most current code base.  First
@@ -36,6 +39,7 @@ root.
 
 `$ python setup.py install`
 
+
 ### Download
 If you don't have git installed on your computer, download the repository as a
 zip file located at the top of the main page.  After the download completes,
@@ -43,6 +47,14 @@ unzip the archive and cd into the extracted directory.  Then run the install
 program.
 
 `$ python setup.py install`
+
+
+### PyPI
+
+Installing from the Python Package Index can be done by using the pip command.
+
+`$ pip install caatinga`
+
 
 After you have installed the package from one of the previous methods, it will
 need to be configured before you make your first backup.  The next section will
