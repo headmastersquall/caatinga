@@ -41,7 +41,8 @@ class SettingsValidator:
     def _hasBackupLocation(self, home):
         if home == "":
             raise Exception("No backup location specified.  This can be set " +
-                            "in caatinga.conf or by providing --backup-location.")
+                            "in caatinga.conf or by providing " +
+                            "--backup-location.")
 
     def _doesBackupLocationExist(self, home):
         if os.path.exists(home) is False:
