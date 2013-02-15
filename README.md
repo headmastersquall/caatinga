@@ -24,13 +24,14 @@ This program is compatible with python versions 2.6 or newer, including 3.x.
 
 
 ### Archlinux
-If you are using Archlinux there's an aur package available:
+If you are using Archlinux there's an AUR package available:
 https://aur.archlinux.org/packages.php?ID=62708
 
 
 ### Source
-Installing from source will insure you have the most current code base.  First
-clone the git repository.
+Installing from source will insure you have the most current code base.  In order
+to run the installer, you must first have the python distribute package installed.
+To get the latest source code, clone the git repository with this command.
 
 `# git clone https://www.github.com/headmastersquall/caatinga`
 
