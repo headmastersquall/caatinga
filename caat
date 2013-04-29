@@ -27,7 +27,7 @@ from caatinga.caat.organizer import organize
 from caatinga.core.CommandArgs import CommandArgs
 from caatinga.core.SettingsValidator import SettingsValidator
 
-__version__ = "caatinga version: 1.0.0"
+__version__ = "caatinga version: 1.0.1"
 usage = """Usage: caat [options]
 
 These options are also available in lscaat.
@@ -106,11 +106,11 @@ def run_backup(args):
     previousBackup = os.path.realpath(fn.getLatestLink(backupHome))
     lockFile = getLockFile(backupHome)
     checkForDeleteOldest(commandArgs, backupHome)
+    markPartialBackupForDeletion(backupHome)
     backupRoot = backup.createBackupRoot(
         backupHome,
         strftime("%Y-%m-%d-%H%M%S") + ".part",
         settings.backupgid)
-    markPartialBackupForDeletion(backupHome)
 
     try:
         lock(lockFile)
@@ -120,8 +120,14 @@ def run_backup(args):
             settings.root,
             settings,
             writer)
+        print("Backup complete")
+        from time import sleep
+        sleep(5)
         os.rename(backupRoot, backupRoot.replace(".part", ""))
+        print("Backup renamed")
+        sleep(5)
         fn.updateLatestLink(backupHome)
+        print("Latest updated")
     finally:
         backup.removeLockFile(lockFile)
 
