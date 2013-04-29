@@ -57,6 +57,12 @@ class CommandArgsTestCase(unittest.TestCase):
             a.deleteOldest,
             True)
 
+##    def test_CleanOptionGetsSet(self):
+##        a = CommandArgs(["--clean"])
+##        self.assertEqual(
+##            a.clean,
+##            True)
+
     def test_LongDeleteOldestGetsSet(self):
         a = CommandArgs(["--delete-oldest"])
         self.assertEqual(

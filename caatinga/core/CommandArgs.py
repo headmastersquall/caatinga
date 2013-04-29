@@ -24,6 +24,7 @@ class CommandArgs:
     def __init__(self, args):
         self.backupLocation = ""
         self.config = ""
+        self.clean = False
         self.deleteOldest = False
         self.register = False
         self.help = False
@@ -53,6 +54,8 @@ class CommandArgs:
         if option in ("-b", "--backup-location"):
             self._requireValue(option, value)
             self.backupLocation = value
+        elif option == "--clean":
+            self.clean = True
         elif option in ("-c", "--config"):
             self._requireValue(option, value)
             self.config = value

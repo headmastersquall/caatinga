@@ -38,6 +38,9 @@ Options:
         Backup location to use.  This will override the setting in
         caatinga.conf.
 
+    --clean
+        Manually remove backups marked for deletion.
+
     -c file, --config=<file>
         Specify an alternate configuration file.
 
@@ -107,6 +110,7 @@ def run_backup(args):
     lockFile = getLockFile(backupHome)
     checkForDeleteOldest(commandArgs, backupHome)
     markPartialBackupForDeletion(backupHome)
+    checkForClean(commandArgs, backupHome, writer)
     backupRoot = backup.createBackupRoot(
         backupHome,
         strftime("%Y-%m-%d-%H%M%S") + ".part",
@@ -177,6 +181,16 @@ def markPartialBackupForDeletion(backupHome):
     for partial in partials:
         partialBackup = os.path.join(backupHome, partial)
         os.rename(partialBackup, partialBackup.replace(".part", ".delete"))
+
+
+def checkForClean(commandArgs, backupHome, writer):
+    """
+    If the clean option is given, delete any backups marked for deletion,
+    then exit.
+    """
+    if commandArgs.clean:
+        deleteBackupsMarkedForDeletion(backupHome, writer)
+        exit(0)
 
 
 def lock(lockFile):
