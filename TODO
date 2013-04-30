@@ -1,7 +1,7 @@
 - Update CommandArgs to use argparse.
 
 - Add hooks support to allow scripts to run pre and post backup.  This would be
-  useful for creating sql dumps.
+  useful for creating sql dumps, LVM Snapshots, mount/umount sshfs.
 
 - Add an option in caatinga.conf to allow the user to define their own diff
   program
