@@ -25,7 +25,7 @@ This program is compatible with python versions 2.6 or newer, including 3.x.
 
 ### Archlinux
 If you are using Archlinux there's an AUR package available:
-https://aur.archlinux.org/packages.php?ID=62708
+https://aur.archlinux.org/packages/caatinga/
 
 
 ### Source
