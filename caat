@@ -124,14 +124,8 @@ def run_backup(args):
             settings.root,
             settings,
             writer)
-        print("Backup complete")
-        from time import sleep
-        sleep(5)
         os.rename(backupRoot, backupRoot.replace(".part", ""))
-        print("Backup renamed")
-        sleep(5)
         fn.updateLatestLink(backupHome)
-        print("Latest updated")
     finally:
         backup.removeLockFile(lockFile)
 
