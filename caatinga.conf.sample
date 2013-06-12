@@ -16,7 +16,7 @@
 # along with caatinga.  If not, see <http://www.gnu.org/licenses/>.
 
 # Configuration options for caat and lscaat.  For more information on the
-# following options, see man caat.conf(5).
+# following options, see man caatinga.conf(5).
 
 # The root directory of the system being backed up.
 root = /
@@ -53,3 +53,15 @@ reduce_backups = yes
 ignore = /proc
 ignore = /dev
 ignore = /sys
+
+# Defines a directory that contains scrips to be executed prior to a backup.
+# Each executable script in this directory will be ran in alphabetical order.
+# In the event a script exits with a non zero exit status, any remaining
+# scripts will not execute and the backup will terminate.
+#pre_hooks = /etc/caatinga/pre_hooks
+
+# Defines a directory that contains scrips to be executed after a backup 
+# completes.  Each executable script in this directory will be ran in
+# alphabetical order.  In the event a script exits with a non zero exit status,
+# any remaining scripts will not execute and the backup will terminate.
+#post_hooks = /etc/caatinga/post_hooks

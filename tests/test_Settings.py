@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2012 Chris Taylor
+# Copyright 2013 Chris Taylor
 #
 # This file is part of caatinga.
 #
@@ -43,7 +43,9 @@ class SettingsTestCase(unittest.TestCase):
         confFile.write("ignore = /etc/passwd\n")
         confFile.write("backup_group = {0}\n".format(
             self._getFirstGroupName()))
-        confFile.write("reduce_backups = yes")
+        confFile.write("reduce_backups = yes\n")
+        confFile.write("pre_hooks = /etc/caatinga/pre_hooks\n")
+        confFile.write("post_hooks = /etc/caatinga/post_hooks\n")
         confFile.close()
         self.settings = Settings.Settings()
         self.settings.loadSettings()
@@ -110,6 +112,18 @@ class SettingsTestCase(unittest.TestCase):
             self.settings.reduceBackups,
             True,
             "Reduce Backups was not set")
+
+    def test_PreHooksDir(self):
+        self.assertEqual(
+            self.settings.preHooksDir,
+            "/etc/caatinga/pre_hooks",
+            "Pre hooks dir was not set")
+
+    def test_PostHooksDir(self):
+        self.assertEqual(
+            self.settings.postHooksDir,
+            "/etc/caatinga/post_hooks",
+            "Post hooks dir was not set")
 
 if __name__ == '__main__':
     unittest.main()

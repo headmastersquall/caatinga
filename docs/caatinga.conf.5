@@ -1,4 +1,4 @@
-.\" Copyright 2012 Chris Taylor
+.\" Copyright 2013 Chris Taylor
 .\"
 .\" This file is part of caatinga.
 .\"
@@ -17,7 +17,7 @@
 .\"
 .\" Man page for the caatinga.conf configuration file
 .\"
-.TH caatinga.conf 5 "June 14 2012" caat "File Formats"
+.TH caatinga.conf 5 "June 12 2013" caat "File Formats"
 
 
 .SH NAME
@@ -81,6 +81,26 @@ Do not backup these files or directories.  This entry can appear more than once
 in the file and may also contain glob expressions.
 .RE
 
+.B pre_hooks
+.RS
+Defines a directory that contains scrips to be executed prior to a backup.
+Each executable script in this directory will be ran in alphabetical order.
+In the event a script exits with a non zero exit status, any remaining scripts
+will not execute and the backup will terminate.
+.RE
+
+.B post_hooks
+.RS
+Defines a directory that contains scrips to be executed after a backup
+completes.  Each executable script in this directory will be ran in alphabetical
+order.  In the event a script exits with a non zero exit status, any remaining
+scripts will not execute and the backup will terminate.
+.RE
+
+Note:  The pre_hooks and post_hooks options are available in case some setup and
+tear down requrements need to be met when performing a backup.  For example, an
+lvm snapshot needs to be made and destroyed, an SQL dump needs to run, the
+backup destination needs to be mounted and unmounted.
 
 .SH FILES
 .I /etc/caatinga/caatinga.conf

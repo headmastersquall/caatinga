@@ -118,6 +118,7 @@ def run_backup(args):
 
     try:
         lock(lockFile)
+        runHooks(settings.preHooksDir)
         backup.backupDirectory(
             backupRoot,
             previousBackup,
@@ -126,6 +127,7 @@ def run_backup(args):
             writer)
         os.rename(backupRoot, backupRoot.replace(".part", ""))
         fn.updateLatestLink(backupHome)
+        runHooks(settings.postHooksDir)
     finally:
         backup.removeLockFile(lockFile)
 
@@ -199,6 +201,30 @@ def lock(lockFile):
     backup.createLockFile(lockFile)
 
 
+def runHooks(directory):
+    """
+    Execute all files with executable permissions found in the provided
+    directory.  All files are ran in alphabetical order.
+    """
+    if os.path.exists(directory):
+        for file_ in fn.getExecutableFiles(directory):
+            exitStatus = os.system(file_)
+            _raiseExceptionIfHookFailed(file_, exitStatus)
+
+
+def _raiseExceptionIfHookFailed(file_, exitStatus):
+    """
+    Will raise an exception with the hook file and the exit status in the
+    error message if the exit status is not zero.
+    """
+    if exitStatus is not 0:
+        # Python returns the exit status as 'value * 256' for some reason, so
+        # we have to devide the number to get the actual exit status.
+        raise Exception("Hook {0} failed with status {1}".format(
+            file_,
+            int(exitStatus / 256)))
+
+
 def checkForReduceBackups(reduceBackups, backupHome):
     """
     Reduce the backups if the reduce backups option is provided.
@@ -216,7 +242,7 @@ def deleteBackupsMarkedForDeletion(backupHome, writer):
         fn.deleteBackup(backupHome, backup)
 
 
-def checkDrivePercentage(backupHome, drivePercentage, outputWriter):
+def checkDrivePercentage(backupHome, drivePercentage, writer):
     '''
     Compares drive usage with user settings and deletes old backups as
     necessary.
@@ -225,7 +251,7 @@ def checkDrivePercentage(backupHome, drivePercentage, outputWriter):
         if len(fn.getBackups(backupHome)) <= 1:
             break
         oldest = fn.getOldestBackup(backupHome)
-        outputWriter("Deleting: {0}".format(oldest))
+        writer("Deleting: {0}".format(oldest))
         fn.deleteBackup(backupHome, oldest)
 
 if __name__ == "__main__":

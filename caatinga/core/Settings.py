@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2012 Chris Taylor
+# Copyright 2013 Chris Taylor
 #
 # This file is part of caatinga.
 #
@@ -50,6 +50,8 @@ class Settings:
         self.backupgid = os.getgid()
         self.reduceBackups = False
         self.root = ""
+        self.preHooksDir = ""
+        self.postHooksDir = ""
 
     def loadSettings(self, conf=""):
         """
@@ -101,6 +103,10 @@ class Settings:
             self.backupgid = self._extractGroupIdFromGroup(value)
         elif option == "reduce_backups":
             self.reduceBackups = True
+        elif option == "pre_hooks":
+            self.preHooksDir = value
+        elif option == "post_hooks":
+            self.postHooksDir = value
         else:
             print("Warning: Unknown setting '{0}'".format(option))
 

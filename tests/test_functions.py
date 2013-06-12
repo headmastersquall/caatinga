@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2012 Chris Taylor
+# Copyright 2013 Chris Taylor
 #
 # This file is part of caatinga.
 #
@@ -25,6 +25,7 @@ from os import sep
 from shutil import rmtree
 from os.path import join, exists
 from datetime import datetime
+from testutils import touch
 
 
 class FunctionsTestCase(unittest.TestCase):
@@ -278,6 +279,29 @@ class FunctionsTestCase(unittest.TestCase):
             newRoot,
             "/foo/bar",
             "Invalid alt root returned: {0}".format(newRoot))
+
+    def test_checkingIfFileIsExcetutable(self):
+        executableFile = join(self._backupHome, "exeFile")
+        touch(executableFile)
+        os.chmod(executableFile, 755)
+        self.assertTrue(fn.isExecutable(executableFile))
+        os.remove(executableFile)
+
+    def test_getExecutableFiles_returnsProperFileList(self):
+        directory = "fileList"
+        os.mkdir(directory)
+        touch(join(directory, "a"), 755)
+        touch(join(directory, "c"), 755)
+        touch(join(directory, "b"), 755)
+        expected = [
+            join(directory, "a"),
+            join(directory, "b"),
+            join(directory, "c")]
+        self.assertEqual(fn.getExecutableFiles(directory), expected)
+        os.remove(join(directory, "a"))
+        os.remove(join(directory, "b"))
+        os.remove(join(directory, "c"))
+        os.rmdir(directory)
 
 if __name__ == '__main__':
     unittest.main()

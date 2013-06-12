@@ -17,6 +17,14 @@
 # You should have received a copy of the GNU General Public License
 # along with caatinga.  If not, see <http://www.gnu.org/licenses/>.
 
-FILESYSTEM_FULL = 28
-PERMISSION_DENIED = 13  # This could also be 20
-OPERATION_NOT_PERMITTED = 1
+import os
+
+
+def touch(file_, mode=444):
+    """
+    Creates a file.
+    """
+    if not os.path.exists(file_):
+        with open(file_, 'w'):
+            pass
+        os.chmod(file_, mode)

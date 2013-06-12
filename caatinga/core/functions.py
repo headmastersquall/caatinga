@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2012 Chris Taylor
+# Copyright 2013 Chris Taylor
 #
 # This file is part of caatinga.
 #
@@ -24,13 +24,14 @@ import stat
 import sys
 from datetime import datetime
 from glob import glob
+from os.path import join
 
 
 def registerBackupDevice(backupLocation, gid):
     """
     Register this device as a backup device.
     """
-    backupHome = os.path.join(backupLocation, "Backups.backupdb")
+    backupHome = join(backupLocation, "Backups.backupdb")
 
     if os.path.ismount(backupLocation) is False:
         message = "There is no mounted device at {0} to be registered"
@@ -111,14 +112,14 @@ def getLatestBackup(backupHome):
     """
     Gets the backup directory that the Latest link points to.
     """
-    return os.readlink(os.path.join(backupHome, "Latest"))
+    return os.readlink(join(backupHome, "Latest"))
 
 
 def getLatestLink(backupHome):
     """
     Returns the path and file name of the Latest link.
     """
-    return os.path.join(backupHome, "Latest")
+    return join(backupHome, "Latest")
 
 
 def updateLatestLink(backupHome):
@@ -180,14 +181,14 @@ def deleteBackup(backupHome, backup):
     """
     Delete the provided backup.
     """
-    shutil.rmtree(os.path.join(backupHome, backup))
+    shutil.rmtree(join(backupHome, backup))
 
 
 def markBackupForDeletion(backupHome, backup):
     """
     Mark a backup to be deleted later.
     """
-    fullBackupName = os.path.join(backupHome, backup)
+    fullBackupName = join(backupHome, backup)
     os.rename(fullBackupName, fullBackupName + ".delete")
 
 
@@ -219,7 +220,7 @@ def expandGlob(backupHome, backup, cwd, globPattern):
     found in the provided backup.  The items returned are absolute
     names.
     """
-    backupWorkingDir = os.path.join(backupHome, backup) + cwd
+    backupWorkingDir = join(backupHome, backup) + cwd
     return glob(backupWorkingDir + os.sep + globPattern)
 
 
@@ -434,3 +435,24 @@ def removeAltRoot(altRoot, item):
     if altRoot == "/":
         return item
     return "/" + item[len(altRoot) + 1:]
+
+
+def isExecutable(file_):
+    """
+    Returns True if the file is executable.
+    """
+    return os.access(file_, os.X_OK)
+
+
+def getExecutableFiles(directory):
+    """
+    Returns a list of file that include the absolute path.  Files are returned
+    in alphabetical order.
+    """
+    files = []
+    for item in os.listdir(directory):
+        file_ = join(directory, item)
+        if os.path.isfile(file_) and isExecutable(file_):
+            files.append(file_)
+    files.sort()
+    return files

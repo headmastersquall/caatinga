@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2012 Chris Taylor
+# Copyright 2013 Chris Taylor
 #
 # This file is part of caatinga.
 #
@@ -37,6 +37,8 @@ class SettingsValidator:
         self._isBackupLocationMounted(settings.backupLocation)
         self._isBackupLocationRegistered(settings.backupLocation)
         self._doesRootDirectoryExist(settings.root)
+        self._doesPreHooksDirectoryExits(settings.preHooksDir)
+        self._doesPostHooksDirectoryExits(settings.postHooksDir)
 
     def _hasBackupLocation(self, home):
         if home == "":
@@ -46,7 +48,7 @@ class SettingsValidator:
 
     def _doesBackupLocationExist(self, home):
         if os.path.exists(home) is False:
-            raise Exception("Backup location doesn't exist")
+            raise Exception("Backup location doesn't exist.")
 
     def _isBackupLocationMounted(self, home):
         if os.path.ismount(home) is False:
@@ -59,4 +61,12 @@ class SettingsValidator:
 
     def _doesRootDirectoryExist(self, root):
         if os.path.exists(root) is False:
-            raise Exception("Root directory doesn't exist")
+            raise Exception("Root directory doesn't exist.")
+
+    def _doesPreHooksDirectoryExits(self, directory):
+        if len(directory) > 1 and os.path.exists(directory) is False:
+            raise Exception("Pre hook directory does not exist.")
+
+    def _doesPostHooksDirectoryExits(self, directory):
+        if len(directory) > 1 and  os.path.exists(directory) is False:
+            raise Exception("Post hook directory does not exist.")

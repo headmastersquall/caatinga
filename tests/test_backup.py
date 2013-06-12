@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2012 Chris Taylor
+# Copyright 2013 Chris Taylor
 #
 # This file is part of caatinga.
 #
@@ -23,6 +23,7 @@ import context
 import caatinga.caat.backup as backup
 from os.path import join
 from shutil import rmtree
+from testutils import touch
 
 
 class BackupTestCase(unittest.TestCase):
@@ -34,10 +35,6 @@ class BackupTestCase(unittest.TestCase):
 
     def setUp(self):
         os.mkdir(self._backupHome)
-
-    def _touch(self, file_):
-        with open(file_, 'w'):
-            pass
 
     def tearDown(self):
         rmtree(self._backupHome)
@@ -95,15 +92,15 @@ class BackupTestCase(unittest.TestCase):
 
     def test_isFileModifiedOrNew_fileIsNew(self):
         newFile = join(self._backupHome, "newFile")
-        self._touch(newFile)
+        touch(newFile)
         self.assertTrue(backup.isFileModifiedOrNew("Blah", newFile))
         os.remove(newFile)
 
     def test_isFileModifiedOrNew_fileIsModified(self):
         previousFile = join(self._backupHome, "oldFile")
         newFile = join(self._backupHome, "newFile")
-        self._touch(previousFile)
-        self._touch(newFile)
+        touch(previousFile)
+        touch(newFile)
         os.utime(previousFile, (1340664089, 1320861443))
         self.assertTrue(backup.isFileModifiedOrNew(previousFile, newFile))
         os.remove(previousFile)
@@ -112,8 +109,8 @@ class BackupTestCase(unittest.TestCase):
     def test_isFileModifiedOrNew_fileHasNoChanges(self):
         previousFile = join(self._backupHome, "oldFile")
         newFile = join(self._backupHome, "newFile")
-        self._touch(previousFile)
-        self._touch(newFile)
+        touch(previousFile)
+        touch(newFile)
         self.assertFalse(backup.isFileModifiedOrNew(previousFile, newFile))
         os.remove(previousFile)
         os.remove(newFile)
