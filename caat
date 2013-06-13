@@ -66,6 +66,8 @@ Options:
         Displays version information and exits.
 """
 
+class CleanExitException(Exception): pass
+
 
 def main(args):
     """
@@ -101,16 +103,22 @@ def run_backup(args):
         print(__version__)
         exit(0)
 
-    settings = fn.getSettingsInstance(commandArgs)
-    checkForRegisterOption(settings, commandArgs)
-    SettingsValidator().validate(settings)
-    writer = fn.getOutputWriter(commandArgs.verbose)
-    backupHome = fn.getBackupHome(settings.backupLocation, settings.hostName)
-    previousBackup = os.path.realpath(fn.getLatestLink(backupHome))
-    lockFile = getLockFile(backupHome)
-    checkForDeleteOldest(commandArgs, backupHome)
-    markPartialBackupForDeletion(backupHome)
-    checkForClean(commandArgs, backupHome, writer)
+    try:
+        settings = fn.getSettingsInstance(commandArgs)
+        runHooks(settings.preHooksDir)
+        checkForRegisterOption(settings, commandArgs)
+        SettingsValidator().validate(settings)
+        writer = fn.getOutputWriter(commandArgs.verbose)
+        backupHome = fn.getBackupHome(settings.backupLocation, settings.hostName)
+        previousBackup = os.path.realpath(fn.getLatestLink(backupHome))
+        lockFile = getLockFile(backupHome)
+        checkForDeleteOldest(commandArgs, backupHome)
+        markPartialBackupForDeletion(backupHome)
+        checkForClean(commandArgs, backupHome, writer)
+    except CleanExitException:
+        runHooks(settings.postHooksDir)
+        exit(0)
+        
     backupRoot = backup.createBackupRoot(
         backupHome,
         strftime("%Y-%m-%d-%H%M%S") + ".part",
@@ -118,7 +126,6 @@ def run_backup(args):
 
     try:
         lock(lockFile)
-        runHooks(settings.preHooksDir)
         backup.backupDirectory(
             backupRoot,
             previousBackup,
@@ -127,13 +134,13 @@ def run_backup(args):
             writer)
         os.rename(backupRoot, backupRoot.replace(".part", ""))
         fn.updateLatestLink(backupHome)
-        runHooks(settings.postHooksDir)
     finally:
         backup.removeLockFile(lockFile)
 
     checkForReduceBackups(settings.reduceBackups, backupHome)
     deleteBackupsMarkedForDeletion(backupHome, writer)
     checkDrivePercentage(backupHome, settings.drivePercentage, writer)
+    runHooks(settings.postHooksDir)
 
 
 def checkForRegisterOption(settings, commandArgs):
@@ -148,57 +155,7 @@ def checkForRegisterOption(settings, commandArgs):
             settings.backupgid)
         print(("The device mounted at {0} is now registered as a " +
               "backup device.").format(settings.backupLocation))
-        exit(0)
-
-
-def getLockFile(backupHome):
-    """
-    Returns the name of the lock file based on the executable name.
-    """
-    exe = os.path.basename(argv[0]).rstrip(".py")
-    return os.path.join(backupHome, exe + ".pid")
-
-
-def checkForDeleteOldest(commandArgs, backupHome):
-    """
-    Check if the option to delete the oldest backup was provided, and delete
-    the oldest backup.
-    """
-    if commandArgs.deleteOldest:
-        fn.deleteBackup(backupHome, fn.getOldestBackup(backupHome))
-        exit(0)
-
-
-def markPartialBackupForDeletion(backupHome):
-    """
-    Looks for any partial backups and marks them for deletion.
-    """
-    partials = fn.getPartialBackups(backupHome)
-    for partial in partials:
-        partialBackup = os.path.join(backupHome, partial)
-        os.rename(partialBackup, partialBackup.replace(".part", ".delete"))
-
-
-def checkForClean(commandArgs, backupHome, writer):
-    """
-    If the clean option is given, delete any backups marked for deletion,
-    then exit.
-    """
-    if commandArgs.clean:
-        deleteBackupsMarkedForDeletion(backupHome, writer)
-        exit(0)
-
-
-def lock(lockFile):
-    """
-    Creates a lock file if one is not present.  If a lock file already exists,
-    an exception will be thrown.
-    """
-    if os.path.exists(lockFile):
-        with open(lockFile) as lock:
-            pid = lock.readline()
-        raise Exception("A backup is currently running [{0}]".format(pid))
-    backup.createLockFile(lockFile)
+        raise CleanExitException()
 
 
 def runHooks(directory):
@@ -223,6 +180,56 @@ def _raiseExceptionIfHookFailed(file_, exitStatus):
         raise Exception("Hook {0} failed with status {1}".format(
             file_,
             int(exitStatus / 256)))
+
+
+def getLockFile(backupHome):
+    """
+    Returns the name of the lock file based on the executable name.
+    """
+    exe = os.path.basename(argv[0]).rstrip(".py")
+    return os.path.join(backupHome, exe + ".pid")
+
+
+def checkForDeleteOldest(commandArgs, backupHome):
+    """
+    Check if the option to delete the oldest backup was provided, and delete
+    the oldest backup.
+    """
+    if commandArgs.deleteOldest:
+        fn.deleteBackup(backupHome, fn.getOldestBackup(backupHome))
+        raise CleanExitException()
+
+
+def markPartialBackupForDeletion(backupHome):
+    """
+    Looks for any partial backups and marks them for deletion.
+    """
+    partials = fn.getPartialBackups(backupHome)
+    for partial in partials:
+        partialBackup = os.path.join(backupHome, partial)
+        os.rename(partialBackup, partialBackup.replace(".part", ".delete"))
+
+
+def checkForClean(commandArgs, backupHome, writer):
+    """
+    If the clean option is given, delete any backups marked for deletion,
+    then exit.
+    """
+    if commandArgs.clean:
+        deleteBackupsMarkedForDeletion(backupHome, writer)
+        raise CleanExitException()
+
+
+def lock(lockFile):
+    """
+    Creates a lock file if one is not present.  If a lock file already exists,
+    an exception will be thrown.
+    """
+    if os.path.exists(lockFile):
+        with open(lockFile) as lock:
+            pid = lock.readline()
+            raise Exception("A backup is currently running [{0}]".format(pid))
+    backup.createLockFile(lockFile)
 
 
 def checkForReduceBackups(reduceBackups, backupHome):
