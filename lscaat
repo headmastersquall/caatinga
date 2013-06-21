@@ -29,7 +29,7 @@ from caatinga.lscaat.listFiles import listFiles
 from caatinga.lscaat.remove import remove
 from caatinga.lscaat.restore import restore
 
-__version__ = "lscaat version: 1.0.1"
+__version__ = "lscaat version: 1.0.2"
 
 
 def main(args):

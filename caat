@@ -27,7 +27,7 @@ from caatinga.caat.organizer import organize
 from caatinga.core.CommandArgs import CommandArgs
 from caatinga.core.SettingsValidator import SettingsValidator
 
-__version__ = "caatinga version: 1.0.1"
+__version__ = "caatinga version: 1.0.2"
 usage = """Usage: caat [options]
 
 These options are also available in lscaat.

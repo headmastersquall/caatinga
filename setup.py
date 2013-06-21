@@ -33,7 +33,7 @@ setup(
               "snapshot", "history", "python"],
     name="caatinga",
     platforms=["Linux", "FreeBSD"],
-    version="1.0.1",
+    version="1.0.2",
     license="GNU GENERAL PUBLIC LICENSE Version 3",
     scripts=["caat", "lscaat"],
     packages=['caatinga', 'caatinga.core', 'caatinga.caat', 'caatinga.lscaat'],
