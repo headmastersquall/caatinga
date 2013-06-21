@@ -203,7 +203,8 @@ def getPartialBackups(backupHome):
     """
     Get backups that have the .part extention.
     """
-    return [d for d in os.listdir(backupHome) if d.endswith(".part")]
+    return [d for d in os.listdir(backupHome)
+            if d.endswith(".part")]
 
 
 def toDateTime(backupDirectory):

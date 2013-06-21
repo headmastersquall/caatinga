@@ -204,6 +204,8 @@ def markPartialBackupForDeletion(backupHome):
     """
     Looks for any partial backups and marks them for deletion.
     """
+    if not os.path.exists(backupHome):
+        return
     partials = fn.getPartialBackups(backupHome)
     for partial in partials:
         partialBackup = os.path.join(backupHome, partial)
