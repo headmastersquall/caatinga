@@ -32,7 +32,8 @@ def listFiles(args, settings):
     for id_ in backups.keys():
         items = fn.expandGlob(home, backups[id_], backupWd, wordArgs["glob"])
         for item in items:
-            _outputItemInfo(id_, fn.getInfo(item))
+            if os.path.exists(item):
+                _outputItemInfo(id_, fn.getInfo(item))
 
 
 def _outputItemInfo(index, info):
