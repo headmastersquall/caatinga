@@ -17,68 +17,58 @@
 # You should have received a copy of the GNU General Public License
 # along with caatinga.  If not, see <http://www.gnu.org/licenses/>.
 
+import argparse
+
+
 __all__ = ["CommandArgs"]
 
 
+parser = argparse.ArgumentParser(description="These options are also available in lscaat.",
+                                 usage="caat [options]",
+                                 formatter_class=argparse.RawTextHelpFormatter)
+parser.add_argument("-b", "--backup-location",
+                    metavar="LOCATION",
+                    dest="location",
+                    default="",
+                    help="Alt Backup location. Overrides value in caatinga.conf.")
+parser.add_argument("--clean",
+                    action="store_true",
+                    help="Manually remove backups marked for deletion.")
+parser.add_argument("-c", "--config",
+                    metavar="FILE",
+                    default="",
+                    help="Specify an alternate configuration file.")
+parser.add_argument("-d", "--delete-oldest",
+                    action="store_true",
+                    help="Delete the oldest backup image.")
+parser.add_argument("-g", "--register",
+                    action="store_true",
+                    help="Register the backup location as a backup device.")
+parser.add_argument("-n", "--hostname",
+                    default="",
+                    help="Alternate hostname.")
+parser.add_argument("-r", "--root",
+                    metavar="PATH",
+                    default="",
+                    help="Alternate root directory to be backed up.")
+parser.add_argument("-v", "--verbose",
+                    action="store_true",
+                    help="Verbose mode.  Display backup activity.")
+parser.add_argument("-V", "--version",
+                    action="store_true",
+                    help="Displays version information and exits.")
+
+args = parser.parse_args()
+
+
 class CommandArgs:
-    def __init__(self, args):
-        self.backupLocation = ""
-        self.config = ""
-        self.clean = False
-        self.deleteOldest = False
-        self.register = False
-        self.help = False
-        self.hostName = ""
-        self.root = ""
-        self.verbose = False
-        self.version = False
-
-        for i in range(len(args)):
-            option = args[i]
-            value = ""
-            if option.startswith("--"):
-                self._setLongOption(option)
-            elif option.startswith("-"):
-                if i + 1 < len(args):
-                    value = args[i + 1]
-                self._setOption(option, value)
-
-    def _setLongOption(self, longOption):
-        if longOption.count("=") == 1:
-            items = longOption.split("=")
-            self._setOption(items[0], items[1])
-        else:
-            self._setOption(longOption, "")
-
-    def _setOption(self, option, value):
-        if option in ("-b", "--backup-location"):
-            self._requireValue(option, value)
-            self.backupLocation = value
-        elif option == "--clean":
-            self.clean = True
-        elif option in ("-c", "--config"):
-            self._requireValue(option, value)
-            self.config = value
-        elif option in ("-d", "--delete-oldest"):
-            self.deleteOldest = True
-        elif option in ("-g", "--register-backup"):
-            self.register = True
-        elif option in ("-h", "--help"):
-            self.help = True
-        elif option in ("-n", "--hostname"):
-            self._requireValue(option, value)
-            self.hostName = value
-        elif option in ("-r", "--root"):
-            self._requireValue(option, value)
-            self.root = value
-        elif option in ("-v", "--verbose"):
-            self.verbose = True
-        elif option in ("-V", "--version"):
-            self.version = True
-        else:
-            raise Exception("Unknown option: {0}".format(option))
-
-    def _requireValue(self, option, value):
-        if not value:
-            raise Exception(
-                "Option '{0}' requires a value parameter.".format(option))
+    def __init__(self):
+        self.backupLocation = args.location
+        self.config = args.config
+        self.clean = args.clean
+        self.deleteOldest = args.delete_oldest
+        self.register = args.register
+        self.hostName = args.hostname
+        self.root = args.root
+        self.verbose = args.verbose
+        self.version = args.version

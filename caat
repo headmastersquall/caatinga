@@ -27,54 +27,17 @@ from caatinga.caat.organizer import organize
 from caatinga.core.CommandArgs import CommandArgs
 from caatinga.core.SettingsValidator import SettingsValidator
 
-__version__ = "caatinga version: 1.0.2"
-usage = """Usage: caat [options]
-
-These options are also available in lscaat.
-
-Options:
-
-    -b location, --backup-location=<location>
-        Backup location to use.  This will override the setting in
-        caatinga.conf.
-
-    --clean
-        Manually remove backups marked for deletion.
-
-    -c file, --config=<file>
-        Specify an alternate configuration file.
-
-    -d, --delete-oldest
-        Delete the oldest backup that caat has created.
-
-    -g, --register-backup
-        Register the backup location as a backup device.
-
-    -h, --help
-        Displays this help message.
-
-    -n hostname, --hostname=<hostname>
-        Use this hostname instead of what is defined for the local system.
-
-    -r path, --root=<path>
-        Use this as the root directory to be backed up.
-
-    -v, --verbose
-        Verbose mode.  Display backup activity.
-
-    -V, --version
-        Displays version information and exits.
-"""
+__version__ = "caatinga version: 1.0.3"
 
 class CleanExitException(Exception): pass
 
 
-def main(args):
+def main():
     """
     Application entry point.
     """
     try:
-        run_backup(args)
+        run_backup()
         exit(0)
     except OSError as er:
         if er.errno == errorcodes.FILESYSTEM_FULL:
@@ -91,14 +54,11 @@ def main(args):
         exit(1)
 
 
-def run_backup(args):
+def run_backup():
     """
     Main method that performs the backup.
     """
-    commandArgs = CommandArgs(args)
-    if commandArgs.help:
-        print(usage)
-        exit(0)
+    commandArgs = CommandArgs()
     if commandArgs.version:
         print(__version__)
         exit(0)
@@ -264,4 +224,4 @@ def checkDrivePercentage(backupHome, drivePercentage, writer):
         fn.deleteBackup(backupHome, oldest)
 
 if __name__ == "__main__":
-    main(argv)
+    main()
