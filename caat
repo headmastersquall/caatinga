@@ -18,6 +18,7 @@
 # along with caatinga.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import errno
 import caatinga.core.errorcodes as errorcodes
 import caatinga.core.functions as fn
 import caatinga.caat.backup as backup
@@ -182,6 +183,15 @@ def checkForClean(commandArgs, backupHome, writer):
         raise CleanExitException()
 
 
+def _is_pid_running(pid):
+    try:
+        os.kill(pid, 0)
+    except OSError as e:
+        return e.errno == errno.EPERM
+    else:
+        return True
+
+
 def lock(lockFile):
     """
     Creates a lock file if one is not present.  If a lock file already exists,
@@ -190,7 +200,10 @@ def lock(lockFile):
     if os.path.exists(lockFile):
         with open(lockFile) as lock:
             pid = lock.readline()
+        if _is_pid_running(pid):
             raise Exception("A backup is currently running [{0}]".format(pid))
+        else:
+            os.remove(lockFile)
     backup.createLockFile(lockFile)
 
 

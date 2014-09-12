@@ -23,14 +23,16 @@ import argparse
 __all__ = ["CommandArgs"]
 
 
-parser = argparse.ArgumentParser(description="These options are also available in lscaat.",
+_DESCRIPTION = "These options are also available in lscaat."
+
+parser = argparse.ArgumentParser(description=_DESCRIPTION,
                                  usage="caat [options]",
                                  formatter_class=argparse.RawTextHelpFormatter)
 parser.add_argument("-b", "--backup-location",
                     metavar="LOCATION",
                     dest="location",
                     default="",
-                    help="Alt Backup location. Overrides value in caatinga.conf.")
+                    help="Alternate backup location.")
 parser.add_argument("--clean",
                     action="store_true",
                     help="Manually remove backups marked for deletion.")
