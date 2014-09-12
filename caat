@@ -24,7 +24,7 @@ import caatinga.caat.backup as backup
 from sys import argv
 from time import strftime
 from caatinga.caat.organizer import organize
-from caatinga.core.CommandArgs import CommandArgs
+from caatinga.core.ArgParser import getArgs
 from caatinga.core.SettingsValidator import SettingsValidator
 
 __version__ = "caatinga version: 1.0.3"
@@ -60,7 +60,7 @@ def run_backup():
     """
     Main method that performs the backup.
     """
-    commandArgs = CommandArgs()
+    commandArgs = getArgs()
     if commandArgs.version:
         print(__version__)
         exit(0)
