@@ -1,7 +1,3 @@
-- Clean run_backup
-
-- Update CommandArgs to use argparse.
-
 - Add an option in caatinga.conf to allow the user to define their own diff
   program
 
