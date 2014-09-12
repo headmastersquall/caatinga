@@ -19,7 +19,6 @@
 
 import os
 import errno
-import caatinga.core.errorcodes as errorcodes
 import caatinga.core.functions as fn
 import caatinga.caat.backup as backup
 from sys import argv
@@ -30,7 +29,9 @@ from caatinga.core.SettingsValidator import SettingsValidator
 
 __version__ = "caatinga version: 1.0.3"
 
-class CleanExitException(Exception): pass
+
+class CleanExitException(Exception):
+    pass
 
 
 def main():
@@ -41,9 +42,9 @@ def main():
         run_backup()
         exit(0)
     except OSError as er:
-        if er.errno == errorcodes.FILESYSTEM_FULL:
+        if er.errno == errno.ENOSPC:
             print("Backup drive is full")
-        elif er.errno == errorcodes.PERMISSION_DENIED:
+        elif er.errno == errno.EACCES:
             print("Permission Denied")
         else:
             print("Operation not permitted on the mounted backup file system")
@@ -64,43 +65,50 @@ def run_backup():
         print(__version__)
         exit(0)
 
+    # Setup
+    settings = fn.getSettingsInstance(commandArgs)
+    SettingsValidator().validate(settings)
+    backupHome = fn.getBackupHome(settings.backupLocation, settings.hostName)
+    lockFile = getLockFile(backupHome)
+    outputWriter = fn.getOutputWriter(commandArgs.verbose)
+    previousBackup = os.path.realpath(fn.getLatestLink(backupHome))
+
+    # Lock it up
+    lock(lockFile)
+    runHooks(settings.preHooksDir)
+
+    # Non backup functions
     try:
-        settings = fn.getSettingsInstance(commandArgs)
-        runHooks(settings.preHooksDir)
         checkForRegisterOption(settings, commandArgs)
-        SettingsValidator().validate(settings)
-        writer = fn.getOutputWriter(commandArgs.verbose)
-        backupHome = fn.getBackupHome(settings.backupLocation, settings.hostName)
-        previousBackup = os.path.realpath(fn.getLatestLink(backupHome))
-        lockFile = getLockFile(backupHome)
         checkForDeleteOldest(commandArgs, backupHome)
         markPartialBackupForDeletion(backupHome)
-        checkForClean(commandArgs, backupHome, writer)
+        checkForClean(commandArgs, backupHome, outputWriter)
     except CleanExitException:
         runHooks(settings.postHooksDir)
         exit(0)
-        
-    backupRoot = backup.createBackupRoot(
-        backupHome,
-        strftime("%Y-%m-%d-%H%M%S") + ".part",
-        settings.backupgid)
 
+    # Run the backup
     try:
-        lock(lockFile)
+        backupRoot = backup.createBackupRoot(
+            backupHome,
+            strftime("%Y-%m-%d-%H%M%S") + ".part",
+            settings.backupgid)
+
         backup.backupDirectory(
             backupRoot,
             previousBackup,
             settings.root,
             settings,
-            writer)
+            outputWriter)
         os.rename(backupRoot, backupRoot.replace(".part", ""))
         fn.updateLatestLink(backupHome)
     finally:
         backup.removeLockFile(lockFile)
 
+    # Post backup functions
     checkForReduceBackups(settings.reduceBackups, backupHome)
-    deleteBackupsMarkedForDeletion(backupHome, writer)
-    checkDrivePercentage(backupHome, settings.drivePercentage, writer)
+    deleteBackupsMarkedForDeletion(backupHome, outputWriter)
+    checkDrivePercentage(backupHome, settings.drivePercentage, outputWriter)
     runHooks(settings.postHooksDir)
 
 
@@ -199,7 +207,7 @@ def lock(lockFile):
     """
     if os.path.exists(lockFile):
         with open(lockFile) as lock:
-            pid = lock.readline()
+            pid = int(lock.readline())
         if _is_pid_running(pid):
             raise Exception("A backup is currently running [{0}]".format(pid))
         else:
