@@ -21,7 +21,7 @@ import grp
 import os
 import unittest
 import context
-from caatinga.core import Settings
+from caatinga.core import settings
 
 
 class SettingsTestCase(unittest.TestCase):
@@ -47,7 +47,7 @@ class SettingsTestCase(unittest.TestCase):
         confFile.write("pre_hooks = /etc/caatinga/pre_hooks\n")
         confFile.write("post_hooks = /etc/caatinga/post_hooks\n")
         confFile.close()
-        self.settings = Settings.Settings()
+        self.settings = settings.Settings()
         self.settings.loadSettings()
 
     def _getFirstGroupName(self):

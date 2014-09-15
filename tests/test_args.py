@@ -19,7 +19,7 @@
 
 import unittest
 import context
-from caatinga.core.CommandArgs import getArgParser
+from caatinga.core.args import getArgParser
 
 
 class CommandArgsTestCase(unittest.TestCase):

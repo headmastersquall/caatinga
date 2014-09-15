@@ -61,7 +61,7 @@ def getSettingsInstance(commandArgs):
     Build a settings instance and set the applicable values from the command
     args.
     """
-    from caatinga.core.Settings import Settings
+    from caatinga.core.settings import Settings
     settings = Settings()
     settings.loadSettings(commandArgs.config)
 

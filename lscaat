@@ -17,9 +17,9 @@
 # You should have received a copy of the GNU General Public License
 # along with caatinga.  If not, see <http://www.gnu.org/licenses/>.
 
-from caatinga.core.ArgParser import getArgParser
+from caatinga.core.args import getArgParser
 from caatinga.core.functions import getSettingsInstance
-from caatinga.core.SettingsValidator import SettingsValidator
+from caatinga.core.validation import SettingsValidator
 from caatinga.lscaat.changes import changes
 from caatinga.lscaat.diff import diff
 from caatinga.lscaat.help import help_

@@ -21,11 +21,10 @@ import os
 import errno
 import caatinga.core.functions as fn
 import caatinga.caat.backup as backup
-from sys import argv
 from time import strftime
 from caatinga.caat.organizer import organize
-from caatinga.core.ArgParser import getArgs
-from caatinga.core.SettingsValidator import SettingsValidator
+from caatinga.core.args import getArgs
+from caatinga.core.validation import SettingsValidator
 
 __version__ = "caatinga version: 1.0.3"
 
@@ -159,8 +158,7 @@ def getLockFile(backupHome):
     """
     Returns the name of the lock file based on the executable name.
     """
-    exe = os.path.basename(argv[0]).rstrip(".py")
-    return os.path.join(backupHome, exe + ".pid")
+    return os.path.join(backupHome, __file__ + ".pid")
 
 
 def checkForDeleteOldest(commandArgs, backupHome):
