@@ -28,7 +28,7 @@ from caatinga.lscaat.listFiles import listFiles
 from caatinga.lscaat.remove import remove
 from caatinga.lscaat.restore import restore
 
-__version__ = "lscaat version: 1.0.2"
+__version__ = "lscaat version: 1.0.3"
 
 
 def main():
@@ -53,6 +53,9 @@ def run_lscaat():
     Main method for lscaat.
     """
     (commandArgs, args) = getArgParser().parse_known_args()
+    if commandArgs.version:
+    	print(__version__)
+    	exit(0)
     settings = getSettingsInstance(commandArgs)
     SettingsValidator().validate(settings)
     runOption(args, settings)

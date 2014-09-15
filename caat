@@ -111,6 +111,7 @@ def executeBackup(previousBackup, settings, outWriter, backupHome, lockFile):
 
 def runPostBackupFunctions(settings, backupHome, outputWriter):
     checkForReduceBackups(settings.reduceBackups, backupHome)
+    checkMaxImages(settings.maxImages, backupHome)
     deleteBackupsMarkedForDeletion(backupHome, outputWriter)
     checkDrivePercentage(backupHome, settings.drivePercentage, outputWriter)
 
@@ -223,6 +224,18 @@ def checkForReduceBackups(reduceBackups, backupHome):
     """
     if reduceBackups:
         organize(backupHome)
+
+
+def checkMaxImages(maxImages, backupHome):
+	"""
+	When the number of backup images are greater than the max provided in
+	settings, mark the extra images to be deleted.
+	"""
+	if maxImages:
+		backups = fn.getBackups(backupHome)
+		toRemove = list(backups.keys())[:len(backups.keys()) - maxImages]
+		for backup in toRemove:
+			fn.markBackupForDeletion(backupHome, backups[backup])
 
 
 def deleteBackupsMarkedForDeletion(backupHome, writer):

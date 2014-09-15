@@ -28,7 +28,7 @@ def getArgParser():
     _DESCRIPTION = "These options are also available in lscaat."
     
     parser = argparse.ArgumentParser(description=_DESCRIPTION,
-                                     usage="caat [options]",
+                                    # usage="caat [options]",
                                      formatter_class=formatter)
     parser.add_argument("-b", "--backup-location",
                         metavar="LOCATION",

@@ -47,6 +47,7 @@ class Settings:
         self.ignoredDirectories = []
         self.ignoredFiles = []
         self.maxFileSize = 0
+        self.maxImages = 0
         self.backupgid = os.getgid()
         self.reduceBackups = False
         self.root = ""
@@ -92,6 +93,8 @@ class Settings:
         elif option == "max_file_size":
             # Convert to bytes
             self.maxFileSize = int(value) * 1024 * 1024
+        elif option == "max_images":
+            self.maxImages = int(value)
         elif option == "drive_percentage":
             self.drivePercentage = int(value)
         elif option == "backup_location":
