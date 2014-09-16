@@ -21,18 +21,21 @@ import os
 import unittest
 import context
 from shutil import rmtree
-from caatinga.core.validation import SettingsValidator
+from caatinga.core.validation import SettingsValidator, ValidationException
 
 BACKUP_HOME = "bk"
 BACKUP_DB = BACKUP_HOME + os.sep + "Backups.backupdb"
 NONEXISTING_DIR = "/foo/bar"
 
+
 class MockSettings():
     def __init__(self):
         self.backupLocation = BACKUP_HOME
         self.root = "/"
-        self.preHooksDir = "/"
-        self.postHooksDir = "/"
+        self.preBackupHooksDir = "/"
+        self.postBackupHooksDir = "/"
+        self.preRestoreHooksDir = "/"
+        self.postRestoreHooksDir = "/"
 
 
 class SettingsValidatorTestCase(unittest.TestCase):
@@ -41,8 +44,10 @@ class SettingsValidatorTestCase(unittest.TestCase):
     """
 
     def setUp(self):
-        if not os.path.exists(BACKUP_HOME): os.mkdir(BACKUP_HOME)
-        if not os.path.exists(BACKUP_DB): os.mkdir(BACKUP_DB)
+        if not os.path.exists(BACKUP_HOME):
+            os.mkdir(BACKUP_HOME)
+        if not os.path.exists(BACKUP_DB):
+            os.mkdir(BACKUP_DB)
         self.settings = MockSettings()
         self.validator = SettingsValidator()
 
@@ -65,17 +70,25 @@ class SettingsValidatorTestCase(unittest.TestCase):
         self.settings.root = NONEXISTING_DIR
         self.assertValidateRaisesException()
 
-    def test_doesPreHooksDirectoryExits(self):
-        self.settings.preHooksDir = NONEXISTING_DIR
+    def test_doesPreBackupHooksDirectoryExits(self):
+        self.settings.preBackupHooksDir = NONEXISTING_DIR
         self.assertValidateRaisesException()
 
-    def test_doesPostHooksDirectoryExits(self):
-        self.settings.postHooksDir = NONEXISTING_DIR
+    def test_doesPostBackupHooksDirectoryExits(self):
+        self.settings.postBackupHooksDir = NONEXISTING_DIR
+        self.assertValidateRaisesException()
+
+    def test_doesPreRestoreHooksDirectoryExits(self):
+        self.settings.preRestoreHooksDir = NONEXISTING_DIR
+        self.assertValidateRaisesException()
+
+    def test_doesPostRestoreHooksDirectoryExits(self):
+        self.settings.postRestoreHooksDir = NONEXISTING_DIR
         self.assertValidateRaisesException()
 
     def assertValidateRaisesException(self):
         self.assertRaises(
-            Exception,
+            ValidationException,
             self.validator.validate,
             self.settings)
 

@@ -214,8 +214,6 @@ def _diff(args):
         ["Show the differences between the provided file compared to the ",
          "version from the last backup.  An optional backup id can be ",
          "provided in order to compare against a specific backed up version."],
-        #TODO: "An alternate diff program can also be defined in the caat.conf
-        #configuration file."
 
         _OPTIONS:
         ["file         Name of the file to perform the comparison with",

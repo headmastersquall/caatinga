@@ -26,9 +26,8 @@ __all__ = ["getArgParser", "getArgs"]
 
 def getArgParser():
     _DESCRIPTION = "These options are also available in lscaat."
-    
+
     parser = argparse.ArgumentParser(description=_DESCRIPTION,
-                                    # usage="caat [options]",
                                      formatter_class=formatter)
     parser.add_argument("-b", "--backup-location",
                         metavar="LOCATION",
@@ -48,7 +47,7 @@ def getArgParser():
                         help="Delete the oldest backup image.")
     parser.add_argument("-g", "--register",
                         action="store_true",
-                        help="Register the backup location as a backup device.")
+                        help="Register the backup location as backup device.")
     parser.add_argument("-n", "--hostname",
                         default="",
                         dest="hostName",

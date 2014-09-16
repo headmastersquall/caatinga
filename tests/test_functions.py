@@ -297,7 +297,7 @@ class FunctionsTestCase(unittest.TestCase):
             join(directory, "a"),
             join(directory, "b"),
             join(directory, "c")]
-        self.assertEqual(fn.getExecutableFiles(directory), expected)
+        self.assertEqual(fn._getExecutableFiles(directory), expected)
         os.remove(join(directory, "a"))
         os.remove(join(directory, "b"))
         os.remove(join(directory, "c"))

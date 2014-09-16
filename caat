@@ -72,11 +72,11 @@ def run_backup():
     previousBackup = os.path.realpath(fn.getLatestLink(backupHome))
 
     lock(lockFile)
-    runHooks(settings.preHooksDir)
+    fn.runHooks(settings.preBackupHooksDir)
     runNonBackupFunctions(settings, commandArgs, backupHome, outputWriter)
     executeBackup(previousBackup, settings, outputWriter, backupHome, lockFile)
     runPostBackupFunctions(settings, backupHome, outputWriter)
-    runHooks(settings.postHooksDir)
+    fn.runHooks(settings.postBackupHooksDir)
 
 
 def runNonBackupFunctions(settings, commandArgs, backupHome, outputWriter):
@@ -86,7 +86,7 @@ def runNonBackupFunctions(settings, commandArgs, backupHome, outputWriter):
         markPartialBackupForDeletion(backupHome)
         checkForClean(commandArgs, backupHome, outputWriter)
     except CleanExitException:
-        runHooks(settings.postHooksDir)
+        fn.runHooks(settings.postBackupHooksDir)
         exit(0)
 
 
@@ -131,30 +131,6 @@ def checkForRegisterOption(settings, commandArgs):
         raise CleanExitException()
 
 
-def runHooks(directory):
-    """
-    Execute all files with executable permissions found in the provided
-    directory.  All files are ran in alphabetical order.
-    """
-    if os.path.exists(directory):
-        for file_ in fn.getExecutableFiles(directory):
-            exitStatus = os.system(file_)
-            _raiseExceptionIfHookFailed(file_, exitStatus)
-
-
-def _raiseExceptionIfHookFailed(file_, exitStatus):
-    """
-    Will raise an exception with the hook file and the exit status in the
-    error message if the exit status is not zero.
-    """
-    if exitStatus is not 0:
-        # Python returns the exit status as 'value * 256' for some reason, so
-        # we have to devide the number to get the actual exit status.
-        raise Exception("Hook {0} failed with status {1}".format(
-            file_,
-            int(exitStatus / 256)))
-
-
 def getLockFile(backupHome):
     """
     Returns the name of the lock file based on the executable name.
@@ -197,10 +173,9 @@ def checkForClean(commandArgs, backupHome, writer):
 def _isPidRunning(pid):
     try:
         os.kill(pid, 0)
+        return True
     except OSError as e:
         return e.errno == errno.EPERM
-    else:
-        return True
 
 
 def lock(lockFile):
@@ -212,7 +187,7 @@ def lock(lockFile):
         with open(lockFile) as lock:
             pid = int(lock.readline())
         if _isPidRunning(pid):
-            raise Exception("A backup is currently running [{0}]".format(pid))
+            raise Exception("A backup is currently running [{}]".format(pid))
         else:
             os.remove(lockFile)
     backup.createLockFile(lockFile)
@@ -227,15 +202,15 @@ def checkForReduceBackups(reduceBackups, backupHome):
 
 
 def checkMaxImages(maxImages, backupHome):
-	"""
-	When the number of backup images are greater than the max provided in
-	settings, mark the extra images to be deleted.
-	"""
-	if maxImages:
-		backups = fn.getBackups(backupHome)
-		toRemove = list(backups.keys())[:len(backups.keys()) - maxImages]
-		for backup in toRemove:
-			fn.markBackupForDeletion(backupHome, backups[backup])
+    """
+    When the number of backup images are greater than the max provided in
+    settings, mark the extra images to be deleted.
+    """
+    if maxImages:
+        backups = fn.getBackups(backupHome)
+        toRemove = list(backups.keys())[:len(backups.keys()) - maxImages]
+        for backup in toRemove:
+            fn.markBackupForDeletion(backupHome, backups[backup])
 
 
 def deleteBackupsMarkedForDeletion(backupHome, writer):

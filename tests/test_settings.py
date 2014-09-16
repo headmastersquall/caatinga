@@ -45,8 +45,10 @@ class SettingsTestCase(unittest.TestCase):
         confFile.write("backup_group = {0}\n".format(
             self._getFirstGroupName()))
         confFile.write("reduce_backups = yes\n")
-        confFile.write("pre_hooks = /etc/caatinga/pre_hooks\n")
-        confFile.write("post_hooks = /etc/caatinga/post_hooks\n")
+        confFile.write("pre_backup_hooks = /etc/caatinga/pre_hooks\n")
+        confFile.write("post_backup_hooks = /etc/caatinga/post_hooks\n")
+        confFile.write("pre_restore_hooks = /etc/caatinga/pre_hooks\n")
+        confFile.write("post_restore_hooks = /etc/caatinga/post_hooks\n")
         confFile.close()
         self.settings = settings.Settings()
         self.settings.loadSettings()
@@ -120,17 +122,29 @@ class SettingsTestCase(unittest.TestCase):
             True,
             "Reduce Backups was not set")
 
-    def test_PreHooksDir(self):
+    def test_PreBackupHooksDir(self):
         self.assertEqual(
-            self.settings.preHooksDir,
+            self.settings.preBackupHooksDir,
             "/etc/caatinga/pre_hooks",
-            "Pre hooks dir was not set")
+            "Pre backup hooks dir was not set")
 
-    def test_PostHooksDir(self):
+    def test_PostBackupHooksDir(self):
         self.assertEqual(
-            self.settings.postHooksDir,
+            self.settings.postBackupHooksDir,
             "/etc/caatinga/post_hooks",
-            "Post hooks dir was not set")
+            "Post backup hooks dir was not set")
+
+    def test_PreRestoreHooksDir(self):
+        self.assertEqual(
+            self.settings.preRestoreHooksDir,
+            "/etc/caatinga/pre_hooks",
+            "Pre backup hooks dir was not set")
+
+    def test_PostRestoreBackupHooksDir(self):
+        self.assertEqual(
+            self.settings.postRestoreHooksDir,
+            "/etc/caatinga/post_hooks",
+            "Post backup hooks dir was not set")
 
 if __name__ == '__main__':
     unittest.main()

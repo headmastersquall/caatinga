@@ -17,8 +17,8 @@
 # You should have received a copy of the GNU General Public License
 # along with caatinga.  If not, see <http://www.gnu.org/licenses/>.
 
+import caatinga.core.functions as fn
 from caatinga.core.args import getArgParser
-from caatinga.core.functions import getSettingsInstance
 from caatinga.core.validation import SettingsValidator
 from caatinga.lscaat.changes import changes
 from caatinga.lscaat.diff import diff
@@ -54,9 +54,9 @@ def run_lscaat():
     """
     (commandArgs, args) = getArgParser().parse_known_args()
     if commandArgs.version:
-    	print(__version__)
-    	exit(0)
-    settings = getSettingsInstance(commandArgs)
+        print(__version__)
+        exit(0)
+    settings = fn.getSettingsInstance(commandArgs)
     SettingsValidator().validate(settings)
     runOption(args, settings)
 
@@ -65,7 +65,7 @@ def usage():
     """
     Display the usage text.
     """
-    print("Type 'lscaat help' for usage.")
+    print("Type '{} help' for usage.".format(__file__))
 
 
 def runOption(args, settings):
@@ -84,10 +84,18 @@ def runOption(args, settings):
         "help": help_,
     }
     m = options.get(args[0].lower())
-    if m:
+    if m and m.__name__ != "help_":
+        runWithHooks(m, args[1:], settings)
+    elif m:
         m(args[1:], settings)
     else:
         unknownCommand(args)
+
+
+def runWithHooks(optionFn, args, settings):
+    fn.runHooks(settings.preRestoreHooksDir)
+    optionFn(args, settings)
+    fn.runHooks(settings.postRestoreHooksDir)
 
 
 def unknownCommand(args):

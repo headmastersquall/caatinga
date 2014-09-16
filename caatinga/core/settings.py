@@ -51,8 +51,10 @@ class Settings:
         self.backupgid = os.getgid()
         self.reduceBackups = False
         self.root = ""
-        self.preHooksDir = ""
-        self.postHooksDir = ""
+        self.preBackupHooksDir = ""
+        self.postBackupHooksDir = ""
+        self.preRestoreHooksDir = ""
+        self.postRestoreHooksDir = ""
 
     def loadSettings(self, conf=""):
         """
@@ -106,10 +108,14 @@ class Settings:
             self.backupgid = self._extractGroupIdFromGroup(value)
         elif option == "reduce_backups":
             self.reduceBackups = True
-        elif option == "pre_hooks":
-            self.preHooksDir = value
-        elif option == "post_hooks":
-            self.postHooksDir = value
+        elif option == "pre_backup_hooks":
+            self.preBackupHooksDir = value
+        elif option == "post_backup_hooks":
+            self.postBackupHooksDir = value
+        elif option == "pre_restore_hooks":
+            self.preRestoreHooksDir = value
+        elif option == "post_restore_hooks":
+            self.postRestoreHooksDir = value
         else:
             print("Warning: Unknown setting '{0}'".format(option))
 

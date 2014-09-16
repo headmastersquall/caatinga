@@ -445,7 +445,18 @@ def isExecutable(file_):
     return os.access(file_, os.X_OK)
 
 
-def getExecutableFiles(directory):
+def runHooks(directory):
+    """
+    Execute all files with executable permissions found in the provided
+    directory.  All files are ran in alphabetical order.
+    """
+    if os.path.exists(directory):
+        for file_ in _getExecutableFiles(directory):
+            exitStatus = os.system(file_)
+            _raiseExceptionIfHookFailed(file_, exitStatus)
+
+
+def _getExecutableFiles(directory):
     """
     Returns a list of file that include the absolute path.  Files are returned
     in alphabetical order.
@@ -457,3 +468,17 @@ def getExecutableFiles(directory):
             files.append(file_)
     files.sort()
     return files
+
+
+def _raiseExceptionIfHookFailed(file_, exitStatus):
+    """
+    Will raise an exception with the hook file and the exit status in the
+    error message if the exit status is not zero.
+    """
+    if exitStatus is not 0:
+        # Python returns the exit status as 'value * 256' for some reason, so
+        # we have to divide the number to get the actual exit status.
+        raise Exception("Hook {0} failed with status {1}".format(
+            file_,
+            int(exitStatus / 256)))
+

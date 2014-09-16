@@ -19,7 +19,11 @@
 
 import os
 
-__all__ = ["SettingsValidator"]
+__all__ = ["SettingsValidator", "ValidationException"]
+
+
+class ValidationException(Exception):
+    pass
 
 
 class SettingsValidator:
@@ -36,32 +40,32 @@ class SettingsValidator:
         self._doesBackupLocationExist(settings.backupLocation)
         self._isBackupLocationRegistered(settings.backupLocation)
         self._doesRootDirectoryExist(settings.root)
-        self._doesPreHooksDirectoryExits(settings.preHooksDir)
-        self._doesPostHooksDirectoryExits(settings.postHooksDir)
+        self._doesHooksDirectoryExits(settings.preBackupHooksDir)
+        self._doesHooksDirectoryExits(settings.postBackupHooksDir)
+        self._doesHooksDirectoryExits(settings.preRestoreHooksDir)
+        self._doesHooksDirectoryExits(settings.postRestoreHooksDir)
 
     def _hasBackupLocation(self, home):
         if home == "":
-            raise Exception("No backup location specified.  This can be set " +
-                            "in caatinga.conf or by providing " +
-                            "--backup-location.")
+            raise ValidationException(
+                "No backup location specified.  This can be set " +
+                "in caatinga.conf or by providing " +
+                "--backup-location.")
 
     def _doesBackupLocationExist(self, home):
         if os.path.exists(home) is False:
-            raise Exception("Backup location doesn't exist.")
+            raise ValidationException("Backup location doesn't exist.")
 
     def _isBackupLocationRegistered(self, home):
         if os.path.exists(home + os.sep + "Backups.backupdb") is False:
-            raise Exception("Backup location isn't registered.  Use " +
-                            "'caat -g' to register.")
+            raise ValidationException(
+                "Backup location isn't registered.  Use " +
+                "'caat -g' to register.")
 
     def _doesRootDirectoryExist(self, root):
         if os.path.exists(root) is False:
-            raise Exception("Root directory doesn't exist.")
+            raise ValidationException("Root directory doesn't exist.")
 
-    def _doesPreHooksDirectoryExits(self, directory):
+    def _doesHooksDirectoryExits(self, directory):
         if len(directory) > 1 and os.path.exists(directory) is False:
-            raise Exception("Pre hook directory does not exist.")
-
-    def _doesPostHooksDirectoryExits(self, directory):
-        if len(directory) > 1 and  os.path.exists(directory) is False:
-            raise Exception("Post hook directory does not exist.")
+            raise ValidationException("Hook directory does not exist.")
