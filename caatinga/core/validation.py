@@ -34,7 +34,6 @@ class SettingsValidator:
         """
         self._hasBackupLocation(settings.backupLocation)
         self._doesBackupLocationExist(settings.backupLocation)
-        self._isBackupLocationMounted(settings.backupLocation)
         self._isBackupLocationRegistered(settings.backupLocation)
         self._doesRootDirectoryExist(settings.root)
         self._doesPreHooksDirectoryExits(settings.preHooksDir)
@@ -49,10 +48,6 @@ class SettingsValidator:
     def _doesBackupLocationExist(self, home):
         if os.path.exists(home) is False:
             raise Exception("Backup location doesn't exist.")
-
-    def _isBackupLocationMounted(self, home):
-        if os.path.ismount(home) is False:
-            raise Exception("Backup location is not mounted")
 
     def _isBackupLocationRegistered(self, home):
         if os.path.exists(home + os.sep + "Backups.backupdb") is False:

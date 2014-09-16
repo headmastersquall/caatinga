@@ -61,7 +61,7 @@ class FunctionsTestCase(unittest.TestCase):
             "Incorrect number of backups returned: {0}".format(len(backups)))
 
     def test_insureBackupHomeExists_throwsException(self):
-        self.assertRaises(Exception, fn.insureBackupHomeExists, "asdf")
+        self.assertRaises(Exception, fn.insureBackupHomeExists, "/foo/bar")
 
     def test_insureBackupHomeExists_noException(self):
         fn.insureBackupHomeExists(self._backupHome)
