@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2013 Chris Taylor
+# Copyright 2014 Chris Taylor
 #
 # This file is part of caatinga.
 #
