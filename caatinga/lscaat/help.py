@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from _abcoll import __all__
 
 # Copyright 2014 Chris Taylor
 #
@@ -22,6 +23,8 @@ _SYNOPSIS = "SYNOPSIS"
 _DESCRIPTION = "DESCRIPTION"
 _OPTIONS = "OPTIONS"
 
+__all__ = ["help_"]
+
 
 def help_(args, settings):
     """
@@ -30,15 +33,15 @@ def help_(args, settings):
     arg = ""
     if len(args) > 0:
         arg = args[0]
-    command = _getHelpMethod(arg)
+    command = _getHelpFunction(arg)
     print(command(args))
 
 
-def _getHelpMethod(command):
+def _getHelpFunction(command):
     """
-    Gets the help method for the provided command.
+    Gets the help function for the provided command.
     """
-    commandMethods = {
+    helpFunctions = {
         "list": _list,
         "ls": _list,
         "remove": _remove,
@@ -49,7 +52,7 @@ def _getHelpMethod(command):
         "diff": _diff,
         "": _usage
     }
-    return commandMethods.get(command, _unknown)
+    return helpFunctions.get(command, _unknown)
 
 
 def _usage(args):
