@@ -47,19 +47,14 @@ stored, as well as provide a degree of control over what files get backed up.
 The root directory of the system that is going to be backed up.
 .RE
 
-.B max_file_size
-.RS
-Do not backup files larger than this value.  Size is in MB.
-.RE
-
-.B drive_percentage
-.RS
-How full must the backup drive get before old backups start to be deleted.
-.RE
-
 .B backup_location
 .RS
 The mount point of the backup device where the backups will be written to.
+.RE
+
+.B hostname
+.RS
+A hostname to be used instead of the local systems hostname. 
 .RE
 
 .B backup_group
@@ -69,10 +64,9 @@ that you want to grant access to the backup drive.  This option should also
 be set prior to registering a backup device to insure proper ownership is set.
 .RE
 
-.B reduce_backups
+.B max_file_size
 .RS
-Value can be yes or no.  If set to yes the backups will automatically be
-reduced to a daily frequency for 31 days, then reduced to weekly.
+Do not backup files larger than this value.  Size is in MB.
 .RE
 
 .B ignore
@@ -81,26 +75,53 @@ Do not backup these files or directories.  This entry can appear more than once
 in the file and may also contain glob expressions.
 .RE
 
-.B pre_hooks
+.B drive_percentage
 .RS
-Defines a directory that contains scrips to be executed prior to a backup.
-Each executable script in this directory will be ran in alphabetical order.
-In the event a script exits with a non zero exit status, any remaining scripts
-will not execute and the backup will terminate.
+How full must the backup drive get before old backups start to be deleted.
 .RE
 
-.B post_hooks
+.B max_images
 .RS
-Defines a directory that contains scrips to be executed after a backup
-completes.  Each executable script in this directory will be ran in alphabetical
-order.  In the event a script exits with a non zero exit status, any remaining
-scripts will not execute and the backup will terminate.
+The maximum number of backup images to be kept for this host.  Using a value
+of 0 allows for an unlimited number of images.
 .RE
 
-Note:  The pre_hooks and post_hooks options are available in case some setup and
-tear down requirements need to be met when performing a backup.  For example, an
-lvm snapshot needs to be made and destroyed, an SQL dump needs to run, the
-backup destination needs to be mounted and unmounted.
+.B reduce_backups
+.RS
+Value can be yes or no.  If set to yes the backups will automatically be
+reduced to a daily frequency for 31 days, then reduced to weekly.
+.RE
+
+.B pre_backup_hooks
+.RS
+Directory of hook scripts to be executed prior to performing a backup.
+.RE
+
+.B post_backup_hooks
+.RS
+Directory of hook scripts to be executed after a backup has performed.
+.RE
+
+.B pre_restore_hooks
+.RS
+Directory of hook scripts to be executed prior to performing a restore
+operation.
+.RE
+
+.B post_restore_hooks
+.RS
+Directory of hook scripts to be executed after a restore operation has been
+performed.
+.RE
+
+Note:  Executable files found in the hooks directories will be executed in
+alphabetical order.  These scripts can be useful to execute actions that need
+to be performed prior to and after a backup/restore operation occurs.  For
+example, an lvm snapshot may need to be created and destroyed to create a
+backup on a frozen file system.  An SQL dump needs to run before running in
+order to include a dump file in the backup.  The backup destination may need
+to be mounted for backup and restore operations and unmounted when the work is
+done.
 
 .SH FILES
 .I /etc/caatinga/caatinga.conf
