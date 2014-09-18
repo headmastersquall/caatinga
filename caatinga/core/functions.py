@@ -77,14 +77,9 @@ def getBackups(backupHome):
     Returns a list of backups from the provided backup home.
     """
     insureBackupHomeExists(backupHome)
-    index = 0
-    backups = {}
-
-    for backup in sorted(d for d in os.listdir(backupHome)
-                         if re.match("^\d{4}-\d{2}-\d{2}-\d{6}$", d)):
-        backups[index] = backup
-        index += 1
-    return backups
+    backups = sorted(d for d in os.listdir(backupHome)
+                    if re.match("^\d{4}-\d{2}-\d{2}-\d{6}$", d))
+    return dict(zip(range(len(backups)), backups))
 
 
 def insureBackupHomeExists(backupHome):
