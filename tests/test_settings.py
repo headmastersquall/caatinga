@@ -38,6 +38,7 @@ class SettingsTestCase(unittest.TestCase):
         confFile.write("max_file_size = 10\n")
         confFile.write("drive_percentage = 20\n")
         confFile.write("max_images = 5\n")
+        confFile.write("keep_days = 14\n")
         confFile.write("backup_location = /home\n")
         confFile.write("ignore = /var\n")
         confFile.write("ignore = /etc/group\n")
@@ -88,6 +89,12 @@ class SettingsTestCase(unittest.TestCase):
             self.settings.maxImages,
             5,
             "Max images is not valid.")
+
+    def test_KeepDays(self):
+        self.assertEqual(
+            self.settings.keepDays,
+            14,
+            "Keep days is not valid.")
 
     def test_BackupLocation(self):
         self.assertEqual(

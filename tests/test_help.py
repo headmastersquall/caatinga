@@ -73,36 +73,37 @@ class HelpTestCase(unittest.TestCase):
         return method([]).count("usage") > 0
 
     def test_getHelpMethodFor_list(self):
-        self.assertTrue(self.isListHelp(lscaatHelp._getHelpMethod("list")))
+        self.assertTrue(self.isListHelp(lscaatHelp._getHelpFunction("list")))
 
     def test_getHelpMethodFor_ls(self):
-        self.assertTrue(self.isListHelp(lscaatHelp._getHelpMethod("ls")))
+        self.assertTrue(self.isListHelp(lscaatHelp._getHelpFunction("ls")))
 
     def test_getHelpMethodFor_remove(self):
-        self.assertTrue(self.isRemoveHelp(lscaatHelp._getHelpMethod("remove")))
+        self.assertTrue(
+            self.isRemoveHelp(lscaatHelp._getHelpFunction("remove")))
 
     def test_getHelpMethodFor_rm(self):
-        self.assertTrue(self.isRemoveHelp(lscaatHelp._getHelpMethod("rm")))
+        self.assertTrue(self.isRemoveHelp(lscaatHelp._getHelpFunction("rm")))
 
     def test_getHelpMethodFor_restore(self):
         self.assertTrue(
-            self.isRestoreHelp(lscaatHelp._getHelpMethod("restore")))
+            self.isRestoreHelp(lscaatHelp._getHelpFunction("restore")))
 
     def test_getHelpMethodFor_info(self):
-        self.assertTrue(self.isInfoHelp(lscaatHelp._getHelpMethod("info")))
+        self.assertTrue(self.isInfoHelp(lscaatHelp._getHelpFunction("info")))
 
     def test_getHelpMethodFor_changes(self):
         self.assertTrue(
-            self.isChangesHelp(lscaatHelp._getHelpMethod("changes")))
+            self.isChangesHelp(lscaatHelp._getHelpFunction("changes")))
 
     def test_getHelpMethodFor_diff(self):
-        self.assertTrue(self.isDiffHelp(lscaatHelp._getHelpMethod("diff")))
+        self.assertTrue(self.isDiffHelp(lscaatHelp._getHelpFunction("diff")))
 
     def test_getHelpMethodFor_usage(self):
-        self.assertTrue(self.isUsage(lscaatHelp._getHelpMethod("")))
+        self.assertTrue(self.isUsage(lscaatHelp._getHelpFunction("")))
 
     def test_getHelpMethodFor_unknown(self):
-        self.assertTrue(self.isUnknown(lscaatHelp._getHelpMethod("foo")))
+        self.assertTrue(self.isUnknown(lscaatHelp._getHelpFunction("foo")))
 
 if __name__ == '__main__':
     unittest.main()

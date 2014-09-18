@@ -86,6 +86,13 @@ The maximum number of backup images to be kept for this host.  Using a value
 of 0 allows for an unlimited number of images.
 .RE
 
+.B keep_days
+.RS
+Number of days a backup image should be kept.  After a backup is performed,
+any image older than keep_days days will be deleted.  A value of zero
+disables this feature.
+.RE
+
 .B reduce_backups
 .RS
 Value can be yes or no.  If set to yes the backups will automatically be

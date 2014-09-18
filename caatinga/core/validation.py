@@ -38,7 +38,6 @@ class SettingsValidator:
         """
         self._hasBackupLocation(settings.backupLocation)
         self._doesBackupLocationExist(settings.backupLocation)
-        self._isBackupLocationRegistered(settings.backupLocation)
         self._doesRootDirectoryExist(settings.root)
         self._doesHooksDirectoryExits(settings.preBackupHooksDir)
         self._doesHooksDirectoryExits(settings.postBackupHooksDir)
@@ -55,12 +54,6 @@ class SettingsValidator:
     def _doesBackupLocationExist(self, home):
         if os.path.exists(home) is False:
             raise ValidationException("Backup location doesn't exist.")
-
-    def _isBackupLocationRegistered(self, home):
-        if os.path.exists(home + os.sep + "Backups.backupdb") is False:
-            raise ValidationException(
-                "Backup location isn't registered.  Use " +
-                "'caat -g' to register.")
 
     def _doesRootDirectoryExist(self, root):
         if os.path.exists(root) is False:

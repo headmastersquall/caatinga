@@ -480,4 +480,3 @@ def _raiseExceptionIfHookFailed(file_, exitStatus):
         raise Exception("Hook {0} failed with status {1}".format(
             file_,
             int(exitStatus / 256)))
-

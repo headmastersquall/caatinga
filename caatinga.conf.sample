@@ -35,7 +35,8 @@ root = /
 
 # Group name that backups are created for.  Be sure to add users to this group
 # that you want to grant access to the backup drive.  This option should also
-# be set prior to registering a backup device to insure proper ownership is set.
+# be set prior to registering a backup device to insure proper ownership is
+# set.
 #backup_group = backup
 
 # Do not backup files that are greater than the
@@ -61,6 +62,11 @@ drive_percentage = 95
 # Maximum number of backup images to be stored.  Setting this to zero will
 # allow for unlimited images.
 max_images = 0
+
+# Number of days a backup image should be kept.  After a backup is performed,
+# any image older than keep_days days will be deleted.  A value of zero
+# disables this feature.
+keep_days = 0
 
 # Set this to yes if you would like old backups to be reduced.
 # The backups will be reduced by age to a frequency of daily then

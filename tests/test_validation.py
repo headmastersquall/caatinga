@@ -62,10 +62,6 @@ class SettingsValidatorTestCase(unittest.TestCase):
         self.settings.backupLocation = NONEXISTING_DIR
         self.assertValidateRaisesException()
 
-    def test_isBackupLocationRegistered(self):
-        os.rmdir(BACKUP_DB)
-        self.assertValidateRaisesException()
-
     def test_doesRootDirectoryExist(self):
         self.settings.root = NONEXISTING_DIR
         self.assertValidateRaisesException()
