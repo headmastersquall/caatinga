@@ -21,10 +21,10 @@ import os
 import errno
 import caatinga.core.functions as fn
 import caatinga.caat.backup as backup
+import caatinga.caat.maintenance as maint
 from time import strftime
-from caatinga.caat.organizer import organize
 from caatinga.core.args import getArgs
-from caatinga.core.validation import SettingsValidator
+from caatinga.core.validation import SettingsValidator, ValidationException
 
 __version__ = "caatinga version: 1.0.3"
 
@@ -50,6 +50,8 @@ def main():
         exit(er.errno)
     except KeyboardInterrupt:
         exit(1)
+    except CleanExitException:
+        exit(0)
     except Exception as ex:
         print(str(ex).strip("'"))
         exit(1)
@@ -67,27 +69,29 @@ def run_backup():
     settings = fn.getSettingsInstance(commandArgs)
     SettingsValidator().validate(settings)
     backupHome = fn.getBackupHome(settings.backupLocation, settings.hostName)
-    lockFile = getLockFile(backupHome)
+    lockFile = backup.getLockFile(backupHome, os.path.basename(__file__))
     outputWriter = fn.getOutputWriter(commandArgs.verbose)
     previousBackup = os.path.realpath(fn.getLatestLink(backupHome))
+    
+    checkForRegisterOption(settings, commandArgs, backupHome)
+    insureBackupLocationIsRegistered(settings.backupLocation)
 
     lock(lockFile)
     fn.runHooks(settings.preBackupHooksDir)
     runNonBackupFunctions(settings, commandArgs, backupHome, outputWriter)
     executeBackup(previousBackup, settings, outputWriter, backupHome, lockFile)
-    runPostBackupFunctions(settings, backupHome, outputWriter)
+    runMaintenanceFunctions(settings, backupHome, outputWriter)
     fn.runHooks(settings.postBackupHooksDir)
 
 
 def runNonBackupFunctions(settings, commandArgs, backupHome, outputWriter):
     try:
-        checkForRegisterOption(settings, commandArgs)
         checkForDeleteOldest(commandArgs, backupHome)
         markPartialBackupForDeletion(backupHome)
         checkForClean(commandArgs, backupHome, outputWriter)
     except CleanExitException:
         fn.runHooks(settings.postBackupHooksDir)
-        exit(0)
+        raise
 
 
 def executeBackup(previousBackup, settings, outWriter, backupHome, lockFile):
@@ -109,33 +113,35 @@ def executeBackup(previousBackup, settings, outWriter, backupHome, lockFile):
         backup.removeLockFile(lockFile)
 
 
-def runPostBackupFunctions(settings, backupHome, outputWriter):
-    checkForReduceBackups(settings.reduceBackups, backupHome)
-    checkMaxImages(settings.maxImages, backupHome)
-    deleteBackupsMarkedForDeletion(backupHome, outputWriter)
-    checkDrivePercentage(backupHome, settings.drivePercentage, outputWriter)
+def runMaintenanceFunctions(settings, backupHome, outputWriter):
+    maint.checkForReduceBackups(settings.reduceBackups, backupHome)
+    maint.checkForKeepDays(settings.keepDays, backupHome)
+    maint.checkMaxImages(settings.maxImages, backupHome)
+    maint.deleteBackupsMarkedForDeletion(backupHome, outputWriter)
+    maint.checkDrivePercentage(backupHome, settings.drivePercentage, outputWriter)
 
 
-def checkForRegisterOption(settings, commandArgs):
+def checkForRegisterOption(settings, commandArgs, backupHome):
     """
     Check the command args for the register option and register the backup
     device if provided.  This will exit with a status 0 if a device was
     registered.
     """
     if commandArgs.register:
-        fn.registerBackupDevice(
+        fn.registerBackupLocation(
             settings.backupLocation,
-            settings.backupgid)
-        print(("The device mounted at {0} is now registered as a " +
-              "backup device.").format(settings.backupLocation))
+            settings.backupgid,
+            backupHome)
+        print(("The backup location {0} is now registered.").format(
+            settings.backupLocation))
         raise CleanExitException()
 
 
-def getLockFile(backupHome):
-    """
-    Returns the name of the lock file based on the executable name.
-    """
-    return os.path.join(backupHome, __file__ + ".pid")
+def insureBackupLocationIsRegistered(backupLocation):
+    if os.path.exists(backupLocation + os.sep + "Backups.backupdb") is False:
+        raise ValidationException(
+            "Backup location isn't registered.  Use " +
+            "'caat -g' to register.")
 
 
 def checkForDeleteOldest(commandArgs, backupHome):
@@ -191,48 +197,6 @@ def lock(lockFile):
         else:
             os.remove(lockFile)
     backup.createLockFile(lockFile)
-
-
-def checkForReduceBackups(reduceBackups, backupHome):
-    """
-    Reduce the backups if the reduce backups option is provided.
-    """
-    if reduceBackups:
-        organize(backupHome)
-
-
-def checkMaxImages(maxImages, backupHome):
-    """
-    When the number of backup images are greater than the max provided in
-    settings, mark the extra images to be deleted.
-    """
-    if maxImages:
-        backups = fn.getBackups(backupHome)
-        toRemove = list(backups.keys())[:len(backups.keys()) - maxImages]
-        for backup in toRemove:
-            fn.markBackupForDeletion(backupHome, backups[backup])
-
-
-def deleteBackupsMarkedForDeletion(backupHome, writer):
-    """
-    Delete backups that are marked to be deleted.
-    """
-    for backup in fn.getBackupsMarkedForDeletion(backupHome):
-        writer("Deleting: {0}".format(backup))
-        fn.deleteBackup(backupHome, backup)
-
-
-def checkDrivePercentage(backupHome, drivePercentage, writer):
-    '''
-    Compares drive usage with user settings and deletes old backups as
-    necessary.
-    '''
-    while drivePercentage < fn.getDriveUsagePercentage(backupHome):
-        if len(fn.getBackups(backupHome)) <= 1:
-            break
-        oldest = fn.getOldestBackup(backupHome)
-        writer("Deleting: {0}".format(oldest))
-        fn.deleteBackup(backupHome, oldest)
 
 if __name__ == "__main__":
     main()

@@ -27,23 +27,21 @@ from glob import glob
 from os.path import join
 
 
-def registerBackupDevice(backupLocation, gid):
+def registerBackupLocation(backupLocation, gid, backupHome):
     """
-    Register this device as a backup device.
+    Register this backup location.
     """
-    backupHome = join(backupLocation, "Backups.backupdb")
-
-    if os.path.ismount(backupLocation) is False:
-        message = "There is no mounted device at {0} to be registered"
-        raise Exception(message.format(backupLocation))
+    backupRoot = join(backupLocation, "Backups.backupdb")
+    dirs = [backupRoot, backupHome]
 
     if os.path.exists(backupHome):
-        message = "The device mounted at {0} is already registered."
+        message = "{0} is already registered."
         raise Exception(message.format(backupLocation))
     else:
-        os.mkdir(backupHome)
-        os.chmod(backupHome, 0o0770)
-        tryToSetOwnership(backupHome, os.getuid(), gid)
+        for dir in dirs:
+            os.mkdir(dir)
+            os.chmod(dir, 0o0770)
+            tryToSetOwnership(dir, os.getuid(), gid)
 
 
 def tryToSetOwnership(item, uid, gid):
@@ -160,7 +158,7 @@ def getOldestBackup(backupHome):
         return backups[0]
 
 
-def getOutputWriter(verbose):
+def getOutputWriter(isVerbose):
     """
     Returns an output writer based on the boolean value provided.  A console
     writer will be returned if True otherwise a silent writer is returned.
@@ -171,7 +169,7 @@ def getOutputWriter(verbose):
     def _consoleWriter(message):
         print(message)
 
-    if verbose:
+    if isVerbose:
         return _consoleWriter
     else:
         return _silentWriter
@@ -196,7 +194,8 @@ def getBackupsMarkedForDeletion(backupHome):
     """
     Get backups that have the .delete extention.
     """
-    return [d for d in os.listdir(backupHome) if d.endswith(".delete")]
+    return [d for d in os.listdir(backupHome)
+            if d.endswith(".delete")]
 
 
 def getPartialBackups(backupHome):
