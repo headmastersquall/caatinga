@@ -18,6 +18,7 @@
 # along with caatinga.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import pwd, grp
 import re
 import shutil
 import stat
@@ -223,26 +224,14 @@ def getGroup(gid):
     """
     Get the group name that belongs to the provided gid.
     """
-    return _getNameFromDb(gid, "/etc/group")
+    return grp.getgrgid(gid).gr_name
 
 
 def getUser(uid):
     """
     Get the user name that belongs to the provided uid.
     """
-    return _getNameFromDb(uid, "/etc/passwd")
-
-
-def _getNameFromDb(nid, dbFile):
-    """
-    Gets the name that belongs to the provided id out of the provided system
-    database file.
-    """
-    with open(dbFile, 'r') as f:
-        for line in f:
-            items = line.split(":")
-            if items[2] == str(nid):
-                return items[0]
+    return pwd.getpwuid(uid).pw_name
 
 
 def getInfo(fileSystemItem):
