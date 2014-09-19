@@ -43,7 +43,7 @@ backups to be ran frequently in a command scheduler to insure current data is
 always backed up.
 
 Each backup that's made is organized by the systems host name.  This allows more
-than one system to use the same backup device.  Files that are backed up can be
+than one system to use the same backup location.  Files that are backed up can be
 viewed, restored or deleted using the
 .BR lscaat (1)
 tool.
@@ -72,7 +72,7 @@ Specify an alternate configuration file.
 Delete the oldest backup for this system.
 .TP
 .BR \-g ", " \-\-register
-Register the backup location as a backup device.
+Register the backup location for use by this machine.
 .TP
 .BR \-h ", " \-\-help
 Displays help message.
@@ -81,7 +81,7 @@ Displays help message.
 Use this hostname instead of what is defined for the local system.
 .TP
 .BR \-r " path, " \-\-root =<path>
-Use this as the root directory to be backed up.
+Specify an alternate root filesystem path.
 .TP
 .BR \-v ", " \-\-verbose
 Verbose mode.  Display backup activity.
@@ -110,7 +110,7 @@ as a backup device.
 .RS
 .P
 .B caat
-\-\-register\-backup
+\-\-register
 .RE
 
 .P
@@ -121,7 +121,7 @@ Create a backup of the current system.
 .RE
 
 .P
-Create a backup of the current system using an alternate backup device.
+Create a backup of the current system using an alternate backup location.
 .RS
 .P
 .B caat

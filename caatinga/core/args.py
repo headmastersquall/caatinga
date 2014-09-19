@@ -20,15 +20,18 @@
 import argparse
 from argparse import RawTextHelpFormatter as formatter
 
-
 __all__ = ["getArgParser", "getArgs"]
+_EPILOG = """Caatinga is a backup and restore suite that uses the
+caat and lscaat commands for creating backups and restoring data.
+See https://www.github.com/headmastersquall/caatinga for more information."""
 
 
 def getArgParser():
     _DESCRIPTION = "These options are also available in lscaat."
 
     parser = argparse.ArgumentParser(description=_DESCRIPTION,
-                                     formatter_class=formatter)
+                                     formatter_class=formatter,
+                                     epilog=_EPILOG)
     parser.add_argument("-b", "--backup-location",
                         metavar="LOCATION",
                         dest="backupLocation",

@@ -78,7 +78,7 @@ def getBackups(backupHome):
     """
     insureBackupHomeExists(backupHome)
     backups = sorted(d for d in os.listdir(backupHome)
-                    if re.match("^\d{4}-\d{2}-\d{2}-\d{6}$", d))
+                     if re.match("^\d{4}-\d{2}-\d{2}-\d{6}$", d))
     return dict(zip(range(len(backups)), backups))
 
 
