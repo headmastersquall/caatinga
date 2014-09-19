@@ -28,7 +28,8 @@ def checkMaxImages(backupHome, maxImages):
     """
     backups = fn.getBackups(backupHome)
     toRemove = list(backups.keys())[:len(backups.keys()) - maxImages]
-    map(lambda b: fn.markBackupForDeletion(backupHome, backups[b]), toRemove)
+    for id in toRemove:
+        fn.markBackupForDeletion(backupHome, backups[id])
 
 
 def deleteBackupsMarkedForDeletion(backupHome, writer):
@@ -52,4 +53,5 @@ def checkForKeepDays(backupHome, keepDays):
 
     backups = fn.getBackups(backupHome).values()
     toRemove = filter(isOld, backups)
-    map(lambda b: fn.markBackupForDeletion(backupHome, b), toRemove)
+    for backup in toRemove:
+        fn.markBackupForDeletion(backupHome, backup)

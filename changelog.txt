@@ -1,0 +1,16 @@
+??? - Next Release
+
+  - Renamed pre_hooks to pre_backup_hooks from caatinga.conf.
+  - Renamed post_hooks to post_backup_hooks from caatinga.conf.
+  - Added pre_restore_hooks to caatinga.conf.
+  - Added post_restore_hooks to caatinga.conf.
+  - Fixed locking bug that would corrupt a running backup if another instance
+    attempted to run.
+  - Added check to see if the locked pid is actually running.
+  - Added max_days to caatinga.conf.
+  - Added max_images to caatinga.conf.
+  - Converted CommandArgs to use argparse and renamed to args.
+  - Normalized all module names to be lower case.
+  - Removed drive_percentage from caatinga.conf.  Replaces with max_images
+    and max_days.  
+  - Removed requirement of having the backup destination a mounted device.

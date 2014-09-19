@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-from _abcoll import __all__
 
 # Copyright 2014 Chris Taylor
 #
