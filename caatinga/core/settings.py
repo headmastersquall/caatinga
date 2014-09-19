@@ -42,7 +42,6 @@ class Settings:
             "/usr/local/etc/caatinga",
         ]
         self.backupLocation = ""
-        self.drivePercentage = 100
         self.hostName = os.uname()[HOST_NAME_INDEX]
         self.ignoredDirectories = []
         self.ignoredFiles = []
@@ -100,8 +99,6 @@ class Settings:
             self.maxImages = int(value)
         elif option == "keep_days":
             self.keepDays = int(value)
-        elif option == "drive_percentage":
-            self.drivePercentage = int(value)
         elif option == "backup_location":
             self.backupLocation = value
             self.ignoredDirectories.append(value)

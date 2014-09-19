@@ -55,10 +55,6 @@ ignore = /sys
 # Image Life Span Settings #
 ############################
 
-# What percentage of the backup drive must be used before old
-# backups are deleted.
-drive_percentage = 95
-
 # Maximum number of backup images to be stored.  Setting this to zero will
 # allow for unlimited images.
 max_images = 0

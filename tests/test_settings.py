@@ -36,7 +36,6 @@ class SettingsTestCase(unittest.TestCase):
         confFile.write("# A comment\n")
         confFile.write("hostname = foobar\n")
         confFile.write("max_file_size = 10\n")
-        confFile.write("drive_percentage = 20\n")
         confFile.write("max_images = 5\n")
         confFile.write("keep_days = 14\n")
         confFile.write("backup_location = /home\n")
@@ -77,12 +76,6 @@ class SettingsTestCase(unittest.TestCase):
             self.settings.maxFileSize,
             10485760,
             "Max file size not valid.")
-
-    def test_DrivePercentage(self):
-        self.assertEqual(
-            self.settings.drivePercentage,
-            20,
-            "Drive percentage not valid.")
 
     def test_MaxImages(self):
         self.assertEqual(

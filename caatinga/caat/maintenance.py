@@ -28,8 +28,7 @@ def checkMaxImages(backupHome, maxImages):
     """
     backups = fn.getBackups(backupHome)
     toRemove = list(backups.keys())[:len(backups.keys()) - maxImages]
-    for backup in toRemove:
-        fn.markBackupForDeletion(backupHome, backups[backup])
+    map(lambda b: fn.markBackupForDeletion(backupHome, backups[b]), toRemove)
 
 
 def deleteBackupsMarkedForDeletion(backupHome, writer):
@@ -37,21 +36,8 @@ def deleteBackupsMarkedForDeletion(backupHome, writer):
     Delete backups that are marked to be deleted.
     """
     for backup in fn.getBackupsMarkedForDeletion(backupHome):
-        writer("Deleting: {0}".format(backup))
+        writer("Deleting: {}".format(backup))
         fn.deleteBackup(backupHome, backup)
-
-
-def checkDrivePercentage(backupHome, drivePercentage, writer):
-    '''
-    Compares drive usage with user settings and deletes old backups as
-    necessary.
-    '''
-    while drivePercentage < fn.getDriveUsagePercentage(backupHome):
-        if len(fn.getBackups(backupHome)) <= 1:
-            break
-        oldest = fn.getOldestBackup(backupHome)
-        writer("Deleting: {0}".format(oldest))
-        fn.deleteBackup(backupHome, oldest)
 
 
 def checkForKeepDays(backupHome, keepDays):
@@ -62,7 +48,7 @@ def checkForKeepDays(backupHome, keepDays):
     def isOld(backup):
         dt = fn.toDateTime(backup)
         expire = datetime.now() - timedelta(days=keepDays)
-        return dt >= expire
+        return dt <= expire
 
     backups = fn.getBackups(backupHome).values()
     toRemove = filter(isOld, backups)

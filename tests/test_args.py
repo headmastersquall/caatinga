@@ -22,7 +22,7 @@ import context
 from caatinga.core.args import getArgParser
 
 
-class CommandArgsTestCase(unittest.TestCase):
+class ArgsTestCase(unittest.TestCase):
     """
     Test suite for testing the CommandArgs class.
     """

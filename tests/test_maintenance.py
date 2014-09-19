@@ -27,7 +27,7 @@ from datetime import timedelta as delta
 from shutil import rmtree
 
 
-class BackupTestCase(unittest.TestCase):
+class MaintenanceTestCase(unittest.TestCase):
     """
     Test case for testing the maintenance functions of caat.
     """
@@ -41,7 +41,7 @@ class BackupTestCase(unittest.TestCase):
         os.mkdir(join(self._backupHome, date.strftime(self._format)))
         date = date - delta(days=1)
         os.mkdir(join(self._backupHome, date.strftime(self._format)))
-        date = date + delta(hours=1)
+        date = date - delta(hours=1)
         os.mkdir(join(self._backupHome, date.strftime(self._format)))
 
     def tearDown(self):
@@ -69,9 +69,6 @@ class BackupTestCase(unittest.TestCase):
             self.getNonDeleteCount(),
             2,
             "Wrong number of backups deleted.")
-
-#    def test_checkDrivePercentage(self):
-#        pass
 
     def test_checkForKeepDays(self):
         keep = 1

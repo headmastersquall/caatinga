@@ -54,7 +54,8 @@ def main():
     except CleanExitException:
         exit(0)
     except Exception as ex:
-        print(str(ex).strip("'"))
+        #print(str(ex).strip("'"))
+        raise
         exit(1)
 
 
@@ -79,13 +80,13 @@ def run_backup():
 
     lock(lockFile)
     fn.runHooks(settings.preBackupHooksDir)
-    runNonBackupFunctions(settings, commandArgs, bkHome, outputWriter)
-    executeBackup(previousBackup, settings, outputWriter, bkHome, lockFile)
-    runMaintenanceFunctions(settings, bkHome, outputWriter)
+    runNonBackupFunctions(bkHome, settings, commandArgs, outputWriter)
+    executeBackup(bkHome, previousBackup, settings, outputWriter, lockFile)
+    runMaintenanceFunctions(bkHome, settings, outputWriter)
     fn.runHooks(settings.postBackupHooksDir)
 
 
-def runNonBackupFunctions(settings, commandArgs, bkHome, outputWriter):
+def runNonBackupFunctions(bkHome, settings, commandArgs, outputWriter):
     try:
         checkForDeleteOldest(commandArgs, bkHome)
         markPartialBackupForDeletion(bkHome)
@@ -95,7 +96,7 @@ def runNonBackupFunctions(settings, commandArgs, bkHome, outputWriter):
         raise
 
 
-def executeBackup(previousBackup, settings, outWriter, bkHome, lockFile):
+def executeBackup(bkHome, previousBackup, settings, outWriter, lockFile):
     try:
         backupRoot = backup.createBackupRoot(
             bkHome,
@@ -114,12 +115,11 @@ def executeBackup(previousBackup, settings, outWriter, bkHome, lockFile):
         backup.removeLockFile(lockFile)
 
 
-def runMaintenanceFunctions(settings, bkHome, outputWriter):
+def runMaintenanceFunctions(bkHome, settings, outputWriter):
     settings.reduceBackups and organize(bkHome)
     settings.keepDays and maint.checkForKeepDays(bkHome, settings.keepDays)
-    settings.maxImages and maint.checkMaxImages(settings.maxImages, bkHome)
+    settings.maxImages and maint.checkMaxImages(bkHome, settings.maxImages)
     maint.deleteBackupsMarkedForDeletion(bkHome, outputWriter)
-    maint.checkDrivePercentage(bkHome, settings.drivePercentage, outputWriter)
 
 
 def checkForRegisterOption(settings, commandArgs, bkHome):
