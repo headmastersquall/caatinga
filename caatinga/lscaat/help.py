@@ -49,6 +49,7 @@ def _getHelpFunction(command):
         "info": _info,
         "changes": _changes,
         "diff": _diff,
+        "ayb": _ayb,
         "": _usage
     }
     return helpFunctions.get(command, _unknown)
@@ -221,6 +222,13 @@ def _diff(args):
         ["file         Name of the file to perform the comparison with",
          "from backup  Specify which backup id to look at to compare against",
          "id           Id number of a backup."]})
+
+
+def _ayb(args):
+    """
+    Just for fun.
+    """
+    return "ALL YOUR BASS ARE BELONG TO US!"
 
 
 def _formatHelp(content):
