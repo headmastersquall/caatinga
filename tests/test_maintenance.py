@@ -59,6 +59,14 @@ class MaintenanceTestCase(unittest.TestCase):
             max,
             "Wrong number of backups remaining.")
 
+    def test_checkMaxImagesWithBiggerMax(self):
+        max = 4
+        maint.checkMaxImages(self._backupHome, max)
+        self.assertEqual(
+            self.getNonDeleteCount(),
+            3,
+            "Wrong number of backups remaining.")
+
     def test_deleteBackupsMarkedForDeletion(self):
         fst = join(self._backupHome, os.listdir(self._backupHome)[0])
         os.rename(fst, fst + ".delete")

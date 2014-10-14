@@ -27,9 +27,10 @@ def checkMaxImages(backupHome, maxImages):
     settings, mark the extra images to be deleted.
     """
     backups = fn.getBackups(backupHome)
-    toRemove = list(backups.keys())[:len(backups.keys()) - maxImages]
-    for id in toRemove:
-        fn.markBackupForDeletion(backupHome, backups[id])
+    if len(backups.keys()) > maxImages:
+        toRemove = list(backups.keys())[:len(backups.keys()) - maxImages]
+        for id in toRemove:
+            fn.markBackupForDeletion(backupHome, backups[id])
 
 
 def deleteBackupsMarkedForDeletion(backupHome, writer):
