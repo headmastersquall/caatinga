@@ -19,8 +19,9 @@
 
 import os
 import grp
-from sys import argv
+from os.path import join
 from glob import iglob
+from sys import argv
 
 __all__ = ["Settings"]
 
@@ -60,6 +61,13 @@ class Settings:
         """
         Loads all settings from the applications conf file.
         """
+        try:
+            self._loadSettingsFromFile(conf)
+        except (IndexError, IOError):
+            err = "Unable to locate configuration file (man caatinga.conf)"
+            raise AttributeError(err)
+
+    def _loadSettingsFromFile(self, conf=""):
         with open(self._getConfFile(conf)) as confFile:
             for line in confFile:
                 line = line.strip()
@@ -69,11 +77,11 @@ class Settings:
     def _getConfFile(self, conf=""):
         if os.path.exists(conf):
             return conf
-        for directory in self._confPath:
-            f = directory + os.sep + self._confFileName
-            if os.path.exists(f):
-                return f
-        raise AttributeError("Unable to locate " + self._confFileName)
+        confFiles = [join(d, f)
+                     for d in self._confPath
+                     for f in [conf, self._confFileName]]
+        return [f for f in confFiles
+                if (f.endswith("conf") and os.path.exists(f))][0]
 
     def _hasContent(self, line):
         return not (line == "" or line[0] == "#")

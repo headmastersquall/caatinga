@@ -18,7 +18,8 @@
 # along with caatinga.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import pwd, grp
+import pwd
+import grp
 import re
 import shutil
 import stat

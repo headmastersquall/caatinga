@@ -30,8 +30,9 @@ class SettingsTestCase(unittest.TestCase):
     """
     _confFile = "caatinga.conf"
 
-    def setUp(self):
-        confFile = open(self._confFile, 'w')
+    @classmethod
+    def setUpClass(cls):
+        confFile = open(SettingsTestCase._confFile, 'w')
         confFile.write("root = /foo\n")
         confFile.write("# A comment\n")
         confFile.write("hostname = foobar\n")
@@ -43,21 +44,21 @@ class SettingsTestCase(unittest.TestCase):
         confFile.write("ignore = /etc/group\n")
         confFile.write("ignore = /etc/passwd\n")
         confFile.write("backup_group = {0}\n".format(
-            self._getFirstGroupName()))
+            grp.getgrall()[0].gr_name))
         confFile.write("reduce_backups = yes\n")
         confFile.write("pre_backup_hooks = /etc/caatinga/pre_hooks\n")
         confFile.write("post_backup_hooks = /etc/caatinga/post_hooks\n")
         confFile.write("pre_restore_hooks = /etc/caatinga/pre_hooks\n")
         confFile.write("post_restore_hooks = /etc/caatinga/post_hooks\n")
         confFile.close()
+
+    @classmethod
+    def tearDownClass(cls):
+        os.remove(SettingsTestCase._confFile)
+
+    def setUp(self):
         self.settings = settings.Settings()
         self.settings.loadSettings()
-
-    def _getFirstGroupName(self):
-        return grp.getgrall()[0].gr_name
-
-    def tearDown(self):
-        os.remove(self._confFile)
 
     def test_Root(self):
         self.assertEqual(

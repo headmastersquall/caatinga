@@ -54,8 +54,7 @@ def main():
     except CleanExitException:
         exit(0)
     except Exception as ex:
-        #print(str(ex).strip("'"))
-        raise
+        print(str(ex).strip("'"))
         exit(1)
 
 
