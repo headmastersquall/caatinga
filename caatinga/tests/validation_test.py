@@ -19,7 +19,6 @@
 
 import os
 import unittest
-import context
 from shutil import rmtree
 from caatinga.core.validation import SettingsValidator, ValidationException
 

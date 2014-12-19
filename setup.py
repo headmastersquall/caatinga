@@ -18,9 +18,11 @@
 # along with caatinga.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-from setuptools import setup
-
-os.system("gzip docs/*")
+import caatinga.caat_main
+from setuptools import setup, find_packages
+            
+            
+os.system("gzip docs/*.[15]")
 
 setup(
     author="Chris Taylor",
@@ -33,15 +35,29 @@ setup(
               "snapshot", "history", "python"],
     name="caatinga",
     platforms=["Linux", "FreeBSD"],
-    version="1.0.2",
+    version=caatinga.caat_main.__version__,
     license="GNU GENERAL PUBLIC LICENSE Version 3",
-    scripts=["caat", "lscaat"],
+    entry_points={
+    	'console_scripts': [
+    		'caat = caatinga.caat_main:main',
+    		'lscaat = caatinga.lscaat_main:main']},
     packages=['caatinga', 'caatinga.core', 'caatinga.caat', 'caatinga.lscaat'],
     data_files=[('/etc/caatinga', ['caatinga.conf.sample']),
 			    ('/etc/caatinga/pre_hooks', []),
 			    ('/etc/caatinga/post_hooks', []),
                 ('/usr/share/man/man1', ["docs/lscaat.1.gz", "docs/caat.1.gz"]),
                 ("/usr/share/man/man5", ["docs/caatinga.conf.5.gz"])],
-    package_data={'caatinga': ['README.md', 'COPYING']})
+    test_suite="caatinga.tests",
+    classifiers=[
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 3",
+        "Development Status :: 5 - Production/Stable",
+        "Environment :: Console",
+        "Intended Audience :: End Users/Desktop",
+        "Intended Audience :: System Administrators",
+        "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+        "Natural Language :: English",
+        "Operating System :: POSIX :: Linux",
+        "Topic :: System :: Archiving :: Backup"])
 
-os.system("gunzip docs/*")
+os.system("gunzip docs/*.[15].gz")

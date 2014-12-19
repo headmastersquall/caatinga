@@ -19,7 +19,6 @@
 
 import os
 import unittest
-import context
 import caatinga.caat.backup as backup
 from os.path import join
 from shutil import rmtree

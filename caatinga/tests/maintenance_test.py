@@ -19,7 +19,6 @@
 
 import os
 import unittest
-import context
 import caatinga.caat.maintenance as maint
 from os.path import join
 from datetime import datetime as dt

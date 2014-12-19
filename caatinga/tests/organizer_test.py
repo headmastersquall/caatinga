@@ -19,7 +19,6 @@
 
 import os
 import unittest
-import context
 from datetime import datetime
 from shutil import rmtree
 from caatinga.caat import organizer

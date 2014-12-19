@@ -1,0 +1,6 @@
+include COPYING
+include README.md
+include docs/caat.1.gz
+include docs/caatinga.conf.5.gz
+include docs/lscaat.1.gz
+include caatinga.conf.sample

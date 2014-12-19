@@ -17,6 +17,7 @@
 # You should have received a copy of the GNU General Public License
 # along with caatinga.  If not, see <http://www.gnu.org/licenses/>.
 
+import caat_main
 import caatinga.core.functions as fn
 from caatinga.core.args import getArgParser
 from caatinga.core.validation import SettingsValidator
@@ -27,8 +28,6 @@ from caatinga.lscaat.info import info
 from caatinga.lscaat.listFiles import listFiles
 from caatinga.lscaat.remove import remove
 from caatinga.lscaat.restore import restore
-
-__version__ = "lscaat version: 1.0.3"
 
 
 def main():
@@ -54,7 +53,7 @@ def run_lscaat():
     """
     (commandArgs, args) = getArgParser().parse_known_args()
     if commandArgs.version:
-        print(__version__)
+        print("lscaat version: " + caat_main.__version__)
         exit(0)
     settings = fn.getSettingsInstance(commandArgs)
     SettingsValidator().validate(settings)

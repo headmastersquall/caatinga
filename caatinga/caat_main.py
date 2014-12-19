@@ -27,7 +27,7 @@ from caatinga.core.args import getArgs
 from caatinga.caat.organizer import organize
 from caatinga.core.validation import SettingsValidator, ValidationException
 
-__version__ = "caatinga version: 1.0.3"
+__version__ = "1.0.3"
 
 
 class CleanExitException(Exception):
@@ -64,7 +64,7 @@ def run_backup():
     """
     commandArgs = getArgs()
     if commandArgs.version:
-        print(__version__)
+        print("caatinga version: " + __version__)
         exit(0)
 
     settings = fn.getSettingsInstance(commandArgs)
@@ -172,7 +172,7 @@ def checkForClean(commandArgs, bkHome, writer):
     then exit.
     """
     if commandArgs.clean:
-        deleteBackupsMarkedForDeletion(bkHome, writer)
+        maint.deleteBackupsMarkedForDeletion(bkHome, writer)
         raise CleanExitException()
 
 

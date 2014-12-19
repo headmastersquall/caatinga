@@ -18,7 +18,6 @@
 # along with caatinga.  If not, see <http://www.gnu.org/licenses/>.
 
 import unittest
-import context
 from caatinga.lscaat import help as lscaatHelp
 
 

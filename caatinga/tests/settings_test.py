@@ -20,7 +20,6 @@
 import grp
 import os
 import unittest
-import context
 from caatinga.core import settings
 
 

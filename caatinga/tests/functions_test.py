@@ -19,7 +19,6 @@
 
 import os
 import unittest
-import context
 import caatinga.core.functions as fn
 from os import sep
 from shutil import rmtree

@@ -18,7 +18,6 @@
 # along with caatinga.  If not, see <http://www.gnu.org/licenses/>.
 
 import unittest
-import context
 from caatinga.core.args import getArgParser
 
 
