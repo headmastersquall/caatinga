@@ -64,7 +64,7 @@ class Settings:
         try:
             self._loadSettingsFromFile(conf)
         except (IndexError, IOError):
-            err = "Unable to locate configuration file (man caatinga.conf)"
+            err = "Unable to locate configuration file (see man caatinga.conf)"
             raise AttributeError(err)
 
     def _loadSettingsFromFile(self, conf=""):
@@ -125,7 +125,8 @@ class Settings:
         elif option == "post_restore_hooks":
             self.postRestoreHooksDir = value
         else:
-            print("Warning: Unknown setting '{0}'".format(option))
+            msg = "Warning: Unknown setting in configuration file '{0}'"
+            print(msg.format(option))
 
     def _setIgnoreItem(self, value):
         for item in iglob(value):

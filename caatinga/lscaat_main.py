@@ -17,7 +17,7 @@
 # You should have received a copy of the GNU General Public License
 # along with caatinga.  If not, see <http://www.gnu.org/licenses/>.
 
-import caat_main
+import caatinga.caat_main as caat
 import caatinga.core.functions as fn
 from caatinga.core.args import getArgParser
 from caatinga.core.validation import SettingsValidator
@@ -53,7 +53,7 @@ def run_lscaat():
     """
     (commandArgs, args) = getArgParser().parse_known_args()
     if commandArgs.version:
-        print("lscaat version: " + caat_main.__version__)
+        print("lscaat version: " + caat.__version__)
         exit(0)
     settings = fn.getSettingsInstance(commandArgs)
     SettingsValidator().validate(settings)
