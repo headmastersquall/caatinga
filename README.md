@@ -62,9 +62,10 @@ to perform before creating your first backup.
   1.  Install the caatinga using one of the methods mentioned above.
 
   2.  Rename the sample configuration file located in /etc/caatinga.
-
-      `$ cd /etc`
-      `$ mv caatinga.conf.sample caatinga.conf`
+      ```
+      $ cd /etc
+      $ mv caatinga.conf.sample caatinga.conf
+      ```
 
   3.  Edit the configuration file and set the `backup_location` to where you
       want your snapshots to be stored.  This can be any location on your
