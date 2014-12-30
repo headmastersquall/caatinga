@@ -20,8 +20,8 @@
 import os
 import caatinga.caat_main
 from setuptools import setup
-            
-            
+
+
 os.system("gzip docs/*.[15]")
 
 setup(
@@ -38,15 +38,15 @@ setup(
     version=caatinga.caat_main.__version__,
     license="GNU GENERAL PUBLIC LICENSE Version 3",
     entry_points={
-    	'console_scripts': [
-    		'caat = caatinga.caat_main:main',
-    		'lscaat = caatinga.lscaat_main:main']},
+        'console_scripts': [
+            'caat = caatinga.caat_main:main',
+            'lscaat = caatinga.lscaat_main:main']},
     packages=['caatinga', 'caatinga.core', 'caatinga.caat', 'caatinga.lscaat'],
     data_files=[('/etc/caatinga', ['caatinga.conf.sample']),
-			    ('/etc/caatinga/pre_backup_hooks', []),
-			    ('/etc/caatinga/post_backup_hooks', []),
-			    ('/etc/caatinga/pre_restore_hooks', []),
-			    ('/etc/caatinga/post_restore_hooks', []),
+                ('/etc/caatinga/pre_backup_hooks', []),
+                ('/etc/caatinga/post_backup_hooks', []),
+                ('/etc/caatinga/pre_restore_hooks', []),
+                ('/etc/caatinga/post_restore_hooks', []),
                 ('/usr/share/man/man1', ["docs/lscaat.1.gz", "docs/caat.1.gz"]),
                 ("/usr/share/man/man5", ["docs/caatinga.conf.5.gz"])],
     test_suite="caatinga.tests",
