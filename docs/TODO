@@ -1,3 +1,5 @@
+- Preserve xattr in files and directories.
+
 - Add an option in caatinga.conf to allow the user to define their own diff
   program
 

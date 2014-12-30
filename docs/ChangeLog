@@ -14,3 +14,4 @@
   - Removed drive_percentage from caatinga.conf.  Replaces with max_images
     and max_days.  
   - Removed requirement of having the backup destination a mounted device.
+  - Reworked setup.py to use setuptools instead of disttools.
