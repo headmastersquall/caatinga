@@ -92,6 +92,9 @@ def runOption(args, settings):
 
 
 def runWithHooks(optionFn, args, settings):
+    """
+    Wrap the provided option call with the pre and post restore hooks.
+    """
     fn.runHooks(settings.preRestoreHooksDir)
     optionFn(args, settings)
     fn.runHooks(settings.postRestoreHooksDir)
