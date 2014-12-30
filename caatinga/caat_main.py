@@ -31,6 +31,11 @@ __version__ = "1.0.3"
 
 
 class CleanExitException(Exception):
+    """
+    This exception is used to exit the program cleanly and allows for any
+    further maintenance calls to be performed first.  Throwing this exception
+    does not indicate an error.
+    """
     pass
 
 
@@ -71,7 +76,7 @@ def run_backup():
     SettingsValidator().validate(settings)
     bkHome = fn.getBackupHome(settings.backupLocation, settings.hostName)
     lockFile = backup.getLockFile(bkHome, os.path.basename(__file__))
-    outputWriter = fn.getOutputWriter(commandArgs.verbose)
+    outWriter = fn.getOutputWriter(commandArgs.verbose)
     previousBackup = os.path.realpath(fn.getLatestLink(bkHome))
 
     checkForRegisterOption(settings, commandArgs, bkHome)
@@ -79,23 +84,31 @@ def run_backup():
 
     lock(lockFile)
     fn.runHooks(settings.preBackupHooksDir)
-    runNonBackupFunctions(bkHome, settings, commandArgs, outputWriter)
-    executeBackup(bkHome, previousBackup, settings, outputWriter, lockFile)
-    runMaintenanceFunctions(bkHome, settings, outputWriter)
+    runNonBackupFunctions(bkHome, settings, commandArgs, outWriter, lockFile)
+    executeBackup(bkHome, previousBackup, settings, outWriter, lockFile)
+    runMaintenanceFunctions(bkHome, settings, outWriter)
     fn.runHooks(settings.postBackupHooksDir)
 
 
-def runNonBackupFunctions(bkHome, settings, commandArgs, outputWriter):
+def runNonBackupFunctions(bkHome, settings, commandArgs, outWriter, lockFile):
+    """
+    Execute functions that do not pertain to actually performing a backup and
+    are more intended on pre-backup conditions.
+    """
     try:
         checkForDeleteOldest(commandArgs, bkHome)
         markPartialBackupForDeletion(bkHome)
-        checkForClean(commandArgs, bkHome, outputWriter)
+        checkForClean(commandArgs, bkHome, outWriter)
     except CleanExitException:
         fn.runHooks(settings.postBackupHooksDir)
+        backup.removeLockFile(lockFile)
         raise
 
 
 def executeBackup(bkHome, previousBackup, settings, outWriter, lockFile):
+    """
+    Perform the backup using the settings provided by the user.
+    """
     try:
         backupRoot = backup.createBackupRoot(
             bkHome,
@@ -115,6 +128,10 @@ def executeBackup(bkHome, previousBackup, settings, outWriter, lockFile):
 
 
 def runMaintenanceFunctions(bkHome, settings, outputWriter):
+    """
+    Execute maintenance functions that are intended to be ran after a
+    successful backup has been performed.
+    """
     settings.reduceBackups and organize(bkHome)
     settings.keepDays and maint.checkForKeepDays(bkHome, settings.keepDays)
     settings.maxImages and maint.checkMaxImages(bkHome, settings.maxImages)
@@ -138,6 +155,9 @@ def checkForRegisterOption(settings, commandArgs, bkHome):
 
 
 def insureBackupLocationIsRegistered(backupLocation):
+    """
+    Raises a ValidationException if the backup location isn't registered.
+    """
     if os.path.exists(backupLocation + os.sep + "Backups.backupdb") is False:
         raise ValidationException(
             "Backup location isn't registered.  Use " +
@@ -177,6 +197,11 @@ def checkForClean(commandArgs, bkHome, writer):
 
 
 def _isPidRunning(pid):
+    """
+    Returns True if the provided pid is currently running.  This is used when
+    checking the pid that is written to the lock file to find out if another
+    backup is running.
+    """
     try:
         os.kill(pid, 0)
         return True
