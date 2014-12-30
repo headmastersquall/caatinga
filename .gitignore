@@ -34,3 +34,6 @@ nosetests.xml
 .mr.developer.cfg
 .project
 .pydevproject
+
+# Local files that don't need to be versioned
+NOTES
