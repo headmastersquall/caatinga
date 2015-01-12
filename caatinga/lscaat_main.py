@@ -64,7 +64,7 @@ def usage():
     """
     Display the usage text.
     """
-    print("Type '{} help' for usage.".format(__file__))
+    print("Type 'lscaat help' for usage.")
 
 
 def runOption(args, settings):
