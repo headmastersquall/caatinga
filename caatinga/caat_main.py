@@ -27,7 +27,7 @@ from caatinga.core.args import getArgs
 from caatinga.caat.organizer import organize
 from caatinga.core.validation import SettingsValidator, ValidationException
 
-__version__ = "1.0.3"
+__version__ = "1.1.0"
 
 
 class CleanExitException(Exception):
