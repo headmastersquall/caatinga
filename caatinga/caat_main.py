@@ -79,11 +79,10 @@ def run_backup():
     outWriter = fn.getOutputWriter(commandArgs.verbose)
     previousBackup = os.path.realpath(fn.getLatestLink(bkHome))
 
+    fn.runHooks(settings.preBackupHooksDir)
     checkForRegisterOption(settings, commandArgs, bkHome)
     insureBackupLocationIsRegistered(settings.backupLocation)
-
     lock(lockFile)
-    fn.runHooks(settings.preBackupHooksDir)
     runNonBackupFunctions(bkHome, settings, commandArgs, outWriter, lockFile)
     executeBackup(bkHome, previousBackup, settings, outWriter, lockFile)
     runMaintenanceFunctions(bkHome, settings, outWriter)
