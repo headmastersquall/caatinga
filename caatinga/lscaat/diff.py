@@ -28,8 +28,9 @@ def diff(args, settings):
     """
     Main function for the diff option.
     """
+    _validateArgs(args)
     wordArgs = fn.parseWordArgs(args)
-    _validateArgs(wordArgs)
+    _validateWordArgs(wordArgs)
     home = fn.getBackupHome(settings.backupLocation, settings.hostName)
     fn.insureBackupHomeExists(home)
     backup = fn.getBackupOrLatest(wordArgs, home)
@@ -43,7 +44,17 @@ def diff(args, settings):
     sys.stdout.writelines(diff(backupFile, localFile))
 
 
-def _validateArgs(wordArgs):
+def _validateArgs(args):
+    """
+    Insure that only one file or glob pattern is passed as an arg.
+    """
+    if len(args) == 0:
+        raise Exception("No file provided to diff.")
+    if len(args) > 1:
+        _raiseMultipleFileException()
+
+
+def _validateWordArgs(wordArgs):
     """
     Insure the word args that were provided are valid.
     """
@@ -53,12 +64,16 @@ def _validateArgs(wordArgs):
 
 def _validateItems(items):
     """
-    Make sure we have proper items to compare.
+    Make sure we have proper number items to compare.
     """
     if not items:
         raise Exception("No items found to compare.")
     if len(items) > 1:
-        raise Exception("Cannot perform diff on more than one file.")
+        _raiseMultipleFileException()
+
+
+def _raiseMultipleFileException():
+    raise Exception("Cannot perform diff on more than one file.")
 
 
 def _getLines(fileName):
