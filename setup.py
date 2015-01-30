@@ -19,7 +19,13 @@
 
 import os
 import caatinga.caat_main
-from setuptools import setup
+
+try:
+    from setuptools import setup
+except ImportError:
+    print("setuptools module not found.  Run python ez_setup.py first.")
+    from sys import exit
+    exit(1)
 
 
 os.system("gzip docs/*.[15]")
