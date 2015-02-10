@@ -18,6 +18,7 @@
 # along with caatinga.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import re
 import errno
 import caatinga.core.functions as fn
 import caatinga.caat.backup as backup
@@ -89,54 +90,6 @@ def run_backup():
     fn.runHooks(settings.postBackupHooksDir)
 
 
-def runNonBackupFunctions(bkHome, settings, commandArgs, outWriter, lockFile):
-    """
-    Execute functions that do not pertain to actually performing a backup and
-    are more intended on pre-backup conditions.
-    """
-    try:
-        checkForDeleteOldest(commandArgs, bkHome)
-        markPartialBackupForDeletion(bkHome)
-        checkForClean(commandArgs, bkHome, outWriter)
-    except CleanExitException:
-        fn.runHooks(settings.postBackupHooksDir)
-        backup.removeLockFile(lockFile)
-        raise
-
-
-def executeBackup(bkHome, previousBackup, settings, outWriter, lockFile):
-    """
-    Perform the backup using the settings provided by the user.
-    """
-    try:
-        backupRoot = backup.createBackupRoot(
-            bkHome,
-            strftime("%Y-%m-%d-%H%M%S") + ".part",
-            settings.backupgid)
-
-        backup.backupDirectory(
-            backupRoot,
-            previousBackup,
-            settings.root,
-            settings,
-            outWriter)
-        os.rename(backupRoot, backupRoot.replace(".part", ""))
-        fn.updateLatestLink(bkHome)
-    finally:
-        backup.removeLockFile(lockFile)
-
-
-def runMaintenanceFunctions(bkHome, settings, outputWriter):
-    """
-    Execute maintenance functions that are intended to be ran after a
-    successful backup has been performed.
-    """
-    settings.reduceBackups and organize(bkHome)
-    settings.keepDays and maint.checkForKeepDays(bkHome, settings.keepDays)
-    settings.maxImages and maint.checkMaxImages(bkHome, settings.maxImages)
-    maint.deleteBackupsMarkedForDeletion(bkHome, outputWriter)
-
-
 def checkForRegisterOption(settings, commandArgs, bkHome):
     """
     Check the command args for the register option and register the backup
@@ -162,6 +115,50 @@ def insureBackupLocationIsRegistered(backupLocation):
             "Backup location isn't registered.  Use " +
             "'caat -g' to register.")
 
+
+def lock(lockFile):
+    """
+    Creates a lock file if one is not present.  If a lock file already exists,
+    an exception will be thrown.
+    """
+    if os.path.exists(lockFile):
+        with open(lockFile) as lock:
+            pid = lock.readline()
+        if not re.match(r"^[0-9]+$", pid):
+            os.remove(lockFile)
+        elif _isPidRunning(pid):
+            raise Exception("A backup is currently running [{}]".format(pid))
+        else:
+            os.remove(lockFile)
+    backup.createLockFile(lockFile)
+
+
+def _isPidRunning(pid):
+    """
+    Returns True if the provided pid is currently running.  This is used when
+    checking the pid that is written to the lock file to find out if another
+    backup is running.
+    """
+    try:
+        os.kill(int(pid), 0)
+        return True
+    except OSError as e:
+        return e.errno == errno.EPERM
+
+
+def runNonBackupFunctions(bkHome, settings, commandArgs, outWriter, lockFile):
+    """
+    Execute functions that do not pertain to actually performing a backup and
+    are more intended on pre-backup conditions.
+    """
+    try:
+        checkForDeleteOldest(commandArgs, bkHome)
+        markPartialBackupForDeletion(bkHome)
+        checkForClean(commandArgs, bkHome, outWriter)
+    except CleanExitException:
+        fn.runHooks(settings.postBackupHooksDir)
+        backup.removeLockFile(lockFile)
+        raise
 
 def checkForDeleteOldest(commandArgs, bkHome):
     """
@@ -195,32 +192,37 @@ def checkForClean(commandArgs, bkHome, writer):
         raise CleanExitException()
 
 
-def _isPidRunning(pid):
+def executeBackup(bkHome, previousBackup, settings, outWriter, lockFile):
     """
-    Returns True if the provided pid is currently running.  This is used when
-    checking the pid that is written to the lock file to find out if another
-    backup is running.
+    Perform the backup using the settings provided by the user.
     """
     try:
-        os.kill(pid, 0)
-        return True
-    except OSError as e:
-        return e.errno == errno.EPERM
+        backupRoot = backup.createBackupRoot(
+            bkHome,
+            strftime("%Y-%m-%d-%H%M%S") + ".part",
+            settings.backupgid)
+
+        backup.backupDirectory(
+            backupRoot,
+            previousBackup,
+            settings.root,
+            settings,
+            outWriter)
+        os.rename(backupRoot, backupRoot.replace(".part", ""))
+        fn.updateLatestLink(bkHome)
+    finally:
+        backup.removeLockFile(lockFile)
 
 
-def lock(lockFile):
+def runMaintenanceFunctions(bkHome, settings, outputWriter):
     """
-    Creates a lock file if one is not present.  If a lock file already exists,
-    an exception will be thrown.
+    Execute maintenance functions that are intended to be ran after a
+    successful backup has been performed.
     """
-    if os.path.exists(lockFile):
-        with open(lockFile) as lock:
-            pid = int(lock.readline())
-        if _isPidRunning(pid):
-            raise Exception("A backup is currently running [{}]".format(pid))
-        else:
-            os.remove(lockFile)
-    backup.createLockFile(lockFile)
+    settings.reduceBackups and organize(bkHome)
+    settings.keepDays and maint.checkForKeepDays(bkHome, settings.keepDays)
+    settings.maxImages and maint.checkMaxImages(bkHome, settings.maxImages)
+    maint.deleteBackupsMarkedForDeletion(bkHome, outputWriter)
 
 if __name__ == "__main__":
     main()
