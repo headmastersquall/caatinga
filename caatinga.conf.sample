@@ -49,6 +49,7 @@ root = /
 ignore = /proc
 ignore = /dev
 ignore = /sys
+ignore = /var/lib/docker/devicemapper
 
 
 ############################
