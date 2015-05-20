@@ -40,11 +40,11 @@ def removeLockFile(lockFile):
         os.remove(lockFile)
 
 
-def getLockFile(backupHome, exeName):
+def getLockFile(lockFileHome, exeName):
     """
     Returns the name of the lock file based on the executable name.
     """
-    return os.path.join(backupHome, exeName + ".pid")
+    return os.path.join(lockFileHome, exeName + ".pid")
 
 
 def createBackupRoot(backupHome, backup, gid):

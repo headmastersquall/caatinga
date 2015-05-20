@@ -27,8 +27,11 @@ def info(args, settings):
     backupHome = fn.getBackupHome(settings.backupLocation, settings.hostName)
     backupCount = len(fn.getBackups(backupHome))
     dtFormat = "%m/%d/%Y %H:%M:%S"
-    lastBackupRan = fn.toDateTime(
-        fn.getLatestBackup(backupHome)).strftime(dtFormat)
+    try:
+        lastBackupRan = fn.toDateTime(
+            fn.getLatestBackup(backupHome)).strftime(dtFormat)
+    except Exception:
+        lastBackupRan = "Never"
     driveUsagePercentage = fn.getDriveUsagePercentage(backupHome)
     fmt = "{0:<20} {1}"
 

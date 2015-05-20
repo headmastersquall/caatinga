@@ -41,7 +41,8 @@ def registerBackupLocation(backupLocation, gid, backupHome):
         raise Exception(message.format(backupLocation))
     else:
         for dir in dirs:
-            os.mkdir(dir)
+            if not os.path.exists(dir):
+                os.mkdir(dir)
             os.chmod(dir, 0o0770)
             tryToSetOwnership(dir, os.getuid(), gid)
 

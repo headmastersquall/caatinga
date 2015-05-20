@@ -28,7 +28,7 @@ from caatinga.core.args import getArgs
 from caatinga.caat.organizer import organize
 from caatinga.core.validation import SettingsValidator, ValidationException
 
-__version__ = "1.1.0"
+__version__ = "1.2.0"
 
 
 class CleanExitException(Exception):
@@ -74,15 +74,18 @@ def run_backup():
         exit(0)
 
     settings = fn.getSettingsInstance(commandArgs)
+    lockFileName = settings.hostName + "-" + os.path.basename(__file__)
     SettingsValidator().validate(settings)
     bkHome = fn.getBackupHome(settings.backupLocation, settings.hostName)
-    lockFile = backup.getLockFile(bkHome, os.path.basename(__file__))
+    lockFile = backup.getLockFile("/tmp", lockFileName)
     outWriter = fn.getOutputWriter(commandArgs.verbose)
     previousBackup = os.path.realpath(fn.getLatestLink(bkHome))
 
     fn.runHooks(settings.preBackupHooksDir)
     checkForRegisterOption(settings, commandArgs, bkHome)
-    insureBackupLocationIsRegistered(settings.backupLocation)
+    insureBackupLocationIsRegistered(
+        settings.backupLocation,
+        settings.hostName)
     lock(lockFile)
     runNonBackupFunctions(bkHome, settings, commandArgs, outWriter, lockFile)
     executeBackup(bkHome, previousBackup, settings, outWriter, lockFile)
@@ -101,16 +104,18 @@ def checkForRegisterOption(settings, commandArgs, bkHome):
             settings.backupLocation,
             settings.backupgid,
             bkHome)
-        print(("The backup location {0} is now registered.").format(
+        print("The backup location {0} is now registered.".format(
             settings.backupLocation))
         raise CleanExitException()
 
 
-def insureBackupLocationIsRegistered(backupLocation):
+def insureBackupLocationIsRegistered(backupLocation, hostName):
     """
     Raises a ValidationException if the backup location isn't registered.
     """
-    if os.path.exists(backupLocation + os.sep + "Backups.backupdb") is False:
+    backupPath = backupLocation + os.sep + \
+        "Backups.backupdb" + os.sep + hostName
+    if os.path.exists(backupPath) is False:
         raise ValidationException(
             "Backup location isn't registered.  Use " +
             "'caat -g' to register.")
@@ -160,13 +165,15 @@ def runNonBackupFunctions(bkHome, settings, commandArgs, outWriter, lockFile):
         backup.removeLockFile(lockFile)
         raise
 
+
 def checkForDeleteOldest(commandArgs, bkHome):
     """
     Check if the option to delete the oldest backup was provided, and delete
     the oldest backup.
     """
     if commandArgs.deleteOldest:
-        fn.deleteBackup(bkHome, fn.getOldestBackup(bkHome))
+        if len(fn.getBackups(bkHome)) > 1:
+            fn.deleteBackup(bkHome, fn.getOldestBackup(bkHome))
         raise CleanExitException()
 
 

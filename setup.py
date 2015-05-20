@@ -69,3 +69,4 @@ setup(
         "Topic :: System :: Archiving :: Backup"])
 
 os.system("gunzip docs/*.[15].gz")
+
