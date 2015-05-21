@@ -3,8 +3,6 @@
 - Add an option in caatinga.conf to allow the user to define their own diff
   program
 
-- Do not show items that are in the ignore list when running lscaat changes.
-
 - Create a new command called caatspace that would allow a loopback or qcow
   type file to be created and used as a local backup device.
 

@@ -35,10 +35,11 @@ def changes(args, settings):
     backupWd = fn.removeAltRoot(settings.root, cwd)
     backedUpFiles = fn.expandGlob(home, backup, backupWd, "*")
     backupDir = join(home, backup) + backupWd
+    ignoredItems = settings.ignoredFiles + settings.ignoredDirectories
     allFiles = set(os.listdir(cwd)).union(map(basename, backedUpFiles))
 
     for item in allFiles:
-        status = _getStatus(join(cwd, item), join(backupDir, item))
+        status = _getStatus(join(cwd, item), join(backupDir, item), ignoredItems)
         if status:
             _outputItem(item, status)
 
@@ -51,12 +52,14 @@ def _validateArgs(wordArgs):
         raise Exception("Cannot show changes from 'all' backups.")
 
 
-def _getStatus(localFile, backedUpFile):
+def _getStatus(localFile, backedUpFile, ignoredItems):
     """
     Return the status of the item provided compared to the version that is
     found in the backup.  Status can be "New", "Deleted" or "Modified".
     """
-    if os.path.exists(localFile) and os.path.exists(backedUpFile) is False:
+    if localFile in ignoredItems:
+        return None
+    elif os.path.exists(localFile) and os.path.exists(backedUpFile) is False:
         return "New"
     elif os.path.exists(localFile) is False and os.path.exists(backedUpFile):
         return "Deleted"
