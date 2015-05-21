@@ -1,5 +1,8 @@
-??? - Next Release
+1.1.0 - 05/21/2015
 
+  - Moved lock file to /tmp and its name includes the host name.
+  - Do not allow caat -d to delete the oldest if ony one backup exists.
+  - Do not show ignored files on lscaat changes output.
   - Renamed pre_hooks to pre_backup_hooks from caatinga.conf.
   - Renamed post_hooks to post_backup_hooks from caatinga.conf.
   - Added pre_restore_hooks to caatinga.conf.
