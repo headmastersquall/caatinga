@@ -1,3 +1,7 @@
+1.1.1 - 05/21/2015
+
+  - Fixed wrong default hook directories in the sample file.
+
 1.1.0 - 05/21/2015
 
   - Moved lock file to /tmp and its name includes the host name.

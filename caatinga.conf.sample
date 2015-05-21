@@ -56,6 +56,11 @@ ignore = /var/lib/docker/devicemapper
 # Image Life Span Settings #
 ############################
 
+# These settings maintain old backups and help insure the backup device never
+# reaches 100% capacity.  Using the default settings will eventually fill up
+# the backup media and is therefore recommended to set max_images and/or
+# keep_days according to your needs to prevent you from running out of space.
+
 # Maximum number of backup images to be stored.  Setting this to zero will
 # allow for unlimited images.
 max_images = 0
@@ -81,13 +86,13 @@ reduce_backups = yes
 # scripts will not execute and the backup or restore operation will terminate.
 
 # Hooks directory for scripts to be executed prior to a backup.
-#pre_backup_hooks = /etc/caatinga/pre_hooks
+#pre_backup_hooks = /etc/caatinga/pre_backup_hooks
 
 # Hooks directory for scripts to be executed after a backup.
-#post_backup_hooks = /etc/caatinga/post_hooks
+#post_backup_hooks = /etc/caatinga/post_backup_hooks
 
 # Hooks directory for scripts to be executed prior to a restore operation.
-#pre_restore_hooks = /etc/caatinga/pre_hooks
+#pre_restore_hooks = /etc/caatinga/pre_restore_hooks
 
 # Hooks directory for scripts to be executed after a restore operation.
-#post_restore_hooks = /etc/caatinga/post_hooks
+#post_restore_hooks = /etc/caatinga/post_restore_hooks
