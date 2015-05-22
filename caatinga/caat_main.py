@@ -74,7 +74,7 @@ def run_backup():
         exit(0)
 
     settings = fn.getSettingsInstance(commandArgs)
-    lockFileName = settings.hostName + "-" + os.path.basename(__file__)
+    lockFileName = settings.hostName + "-caatinga"
     SettingsValidator().validate(settings)
     bkHome = fn.getBackupHome(settings.backupLocation, settings.hostName)
     lockFile = backup.getLockFile("/tmp", lockFileName)
