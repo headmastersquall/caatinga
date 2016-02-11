@@ -22,7 +22,7 @@ mounted locally using http://fuse.sourceforge.net/sshfs.html.  This requires
 a remote machine to have an SSH daemon running and a user account available
 for backup purposes.
 
-Caatinga is compatible with python versions 2.6 or newer, including 3.x.
+Caatinga is compatible with python versions 2.7 or newer, including 3.x.
 
 
 ## Installation
@@ -34,7 +34,7 @@ This is the recommended way to install Caatinga.
 `$ pip install caatinga`
 
 ### Archlinux
-If you are using Archlinux there's an AUR package available:
+An AUR package available here:
 https://aur.archlinux.org/packages/caatinga/
 
 ### Source
